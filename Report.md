@@ -3,7 +3,7 @@
 ## 0. Group number: 
 
 ## 1. Group members:
-1. First
+1. Jack Vacek
 2. Second
 3. Third
 4. Zak Borman

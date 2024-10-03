@@ -6,7 +6,7 @@
 1. First
 2. Second
 3. Third
-4. Fourth
+4. Zak Borman
 
 ## 2. Project topic (e.g., parallel sorting algorithms)
 

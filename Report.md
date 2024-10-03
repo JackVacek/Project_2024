@@ -1,9 +1,11 @@
 # CSCE 435 Group project
 
-## 0. Group number: 
+## 0. Group number: 1 
+
+### **Communicate through Discord**
 
 ## 1. Group members:
-1. Jack Vacek
+1. Jack Vacek - Merge Sort
 2. Second
 3. Third
 4. Zak Borman

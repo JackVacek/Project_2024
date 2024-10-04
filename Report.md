@@ -6,7 +6,7 @@
 
 ## 1. Group members:
 1. Jack Vacek - Merge Sort
-2. Second
+2. Christopher Vu - Bitonic Sort
 3. Third
 4. Zak Borman - Radix Sort
 

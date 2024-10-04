@@ -8,7 +8,7 @@
 1. Jack Vacek - Merge Sort
 2. Second
 3. Third
-4. Zak Borman
+4. Zak Borman - Radix Sort
 
 ## 2. Project topic (e.g., parallel sorting algorithms)
 

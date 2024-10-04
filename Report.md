@@ -7,7 +7,7 @@
 ## 1. Group members:
 1. Jack Vacek - Merge Sort
 2. Christopher Vu - Bitonic Sort
-3. Third
+3. Victor Pan - Sample Sort
 4. Zak Borman - Radix Sort
 
 ## 2. Project topic: Parallel Sorting Algorithms

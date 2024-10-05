@@ -2,7 +2,7 @@
 
 ## 0. Group number: 1 
 
-### **Communicate through Discord**
+Our team will be using Discord to communicate with each other.
 
 ## 1. Group members:
 1. Jack Vacek - Merge Sort
@@ -14,7 +14,7 @@
 
 ### 2a. Brief project description (what algorithms will you be comparing and on what architectures)
 
-- Bitonic Sort: A parallel divide-and-conquer sorting algorithm that creates a bitonic sequence (a series of numbers that monotonically increase and then monotonically decrease) from the input data. To do this, the algorithm uses a network of comparators to perform compare-exchange operations to ensure that the sequence follows this. Then, the algorithm merges the two halves of the sequence to end with a sorted sequence.
+- Bitonic Sort: A parallel divide-and-conquer sorting algorithm that creates a bitonic sequence (a series of numbers that monotonically increase and then monotonically decrease) from the input data. To do this, the algorithm uses a network of comparators to perform compare-exchange operations to ensure that the sequence follows this. Then, the algorithm merges the two halves of the sequence to end with a sorted sequence. With this sorting algorithm, we will be using MPI to communicate data across nodes on the Grace cluster.
 - Sample Sort: A parallel sorting algorithm that works by distributing the data into approximately equal-sized buckets and then sorting each bucket. A random sample of elements is then selected from the given data to determine "pivots" or "splitters" that partitions the data into subsets. Each subset is then sorted independently and merged into a fully sorted output.
 - Merge Sort: A sorting algorithm that uses the divide-and-conquer strategy. This is done by splitting the array down into halves until there is one element left, thus sorting it by default. It then merges these sublists back in sorted order until the original list is sorted. This sorting algorithm is parallelized by splitting the original list down to the number of cores and then sorting those lists in parallel, merging the two halves by the "parent" of those processes and going all the way up back to the original list. I will be doing this using MPI to communicate between nodes and Grace cluster to run it.
 - Radix Sort: A linear sorting algorithm that sorts elements by processing them digit by digit. Rather than comparing elements directly, Radix Sort distributes the elements into buckets based on each digit’s value. By repeatedly sorting the elements by their significant digits, from the least significant to the most significant, Radix Sort achieves the final sorted order. 

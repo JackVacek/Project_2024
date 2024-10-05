@@ -153,7 +153,51 @@ MPI_Gatherv
 // Finalize MPI
 MPI_Finalize
 ```
+**Merge Sort**
+```
+// import mpi, caliper, adiak, etc.
+// define my master and worker
+// main function
+main:
+// store the size of the array
+sizeOfArray = input from user
 
+// create various variables for number of tasks, workers, source, dest, etc. (and buffers)
+numtasks, numworkers, source, dest, timing variables
+
+// Initialize MPI
+MPI_Init
+MPI_Comm_rank
+MPI_Comm_size
+
+// if it is the master, make array
+for loop to make the overall array
+
+// evenly split the arrays along available processes with MPI_Scatter
+MPI_Scatter
+
+// sort master's work
+localmergesort
+
+// push to overall result
+overallResultUpdate
+
+// get all information from other workers
+for all of the number of tasks - the one we just did
+MPI_Recv
+
+// merge the worker array with the global one
+merge
+
+// if worker task, then locally sort and send to master
+localmergesort
+MPI_Send
+
+// Finalize MPI
+MPI_Finalize
+
+// Local merge sort function is the sequential version
+```
 **Radix Sort**
 ```
 Initialize MPI

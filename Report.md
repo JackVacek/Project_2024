@@ -15,7 +15,7 @@
 ### 2a. Brief project description (what algorithms will you be comparing and on what architectures)
 
 - Bitonic Sort:
-- Sample Sort: A parallel sorting algorithm that works by selecting a random sample of elements from the given data to determine "pivots" or "splitters" that partitions the data into subsets. Each subset is then sorted independently and merged into a fully sorted output.
+- Sample Sort: A parallel sorting algorithm that works by distributing the data into approximately equal-sized buckets and then sorting each bucket. A random sample of elements is then selected from the given data to determine "pivots" or "splitters" that partitions the data into subsets. Each subset is then sorted independently and merged into a fully sorted output.
 - Merge Sort: A sorting algorithm that uses the divide-and-conquer strategy. This is done by splitting the array down into halves until there is one element left, thus sorting it by default. It then merges these sublists back in sorted order until the original list is sorted. This sorting algorithm is parallelized by splitting the original list down to the number of cores and then sorting those lists in parallel, merging the two halves by the "parent" of those processes and going all the way up back to the original list. I will be doing this using MPI to communicate between nodes and Grace cluster to run it.
 - Radix Sort: A linear sorting algorithm that sorts elements by processing them digit by digit. Rather than comparing elements directly, Radix Sort distributes the elements into buckets based on each digit’s value. By repeatedly sorting the elements by their significant digits, from the least significant to the most significant, Radix Sort achieves the final sorted order. 
 
@@ -144,6 +144,14 @@ Finalize MPI
 ```
 
 ### 2c. Evaluation plan - what and how will you measure and compare
-- Input sizes, Input types
+- Input sizes, input types, and number of processors used in MPI
+	- Input Sizes:
+		- 2^16, 2^18, 2^20, 2^22, 2^24, 2^26, 2^28
+	- Input Types:
+		- Sorted, Random, Reverse sorted, 1%perturbed
+	- Number of Processors:
+		- 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
 - Strong scaling (same problem size, increase number of processors/nodes)
+	- For strong scaling, we will choose one of the input sizes as the fixed problem size and increase the number of processors according to the range of number of processors provided above. This will be performed for each input size and input type. We will evaluate the effect of strong scaling by comparing runtimes to observe how our algorithms perform with the use of additional processors when maintaining a fixed problem size.
 - Weak scaling (increase problem size, increase number of processors)
+	- For weak scaling, we will increase the problem size as we increase the number of processors following the given input sizes and processor counts. This will be performed for each input type. By comparing runtimes, we will assess the effect weak scaling has on the performance of each of our algorithms when both the problem size and number of processors grows.

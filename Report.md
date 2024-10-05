@@ -257,7 +257,7 @@ Finalize MPI
 	- Input Sizes:
 		- 2^16, 2^18, 2^20, 2^22, 2^24, 2^26, 2^28
 	- Input Types:
-		- Sorted, Random, Reverse sorted, 1%perturbed
+		- Sorted, Random, Reverse sorted, 1% perturbed
 	- Number of Processors:
 		- 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
 - Strong scaling (same problem size, increase number of processors/nodes)

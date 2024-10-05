@@ -22,6 +22,72 @@
 ### 2b. Pseudocode for each parallel algorithm
 - For MPI programs, include MPI calls you will use to coordinate between processes
 
+**Sample Sort**
+```
+// Initialize MPI
+MPI_Init
+
+// Get number of processes and current process rank
+num_processes = MPI_Comm_size(MPI_COMM_WORLD)
+rank = MPI_Comm_rank(MPI_COMM_WORLD)
+
+// Get input array and ensure all processes have the size of the input array
+If rank == 0:
+	Read input array as input_array
+	n = size of input_array
+
+// Broadcast n to non-master processes
+MPI_Bcast
+
+// Split input array into buckets and send them to each process depending on calculated bucket sizes and displacements
+Calculate bucket sizes of each process and displacements
+
+// Scatter input_array to each process
+MPI_Scatterv
+
+// Sort the buckets in each process locally using a preferred sorting algorithm
+Sort local_bucket
+
+// Calculate s and select s local samples from each process
+s = number of samples
+Select s evenly spaced elements from each processes' local_bucket as samples
+
+// Gather all local samples at the master process
+MPI_Gather
+
+// Sort samples then select pivots
+If rank == 0:
+	Sort gathered samples
+	Select num_processes - 1 pivots from gathered samples
+
+// Send pivots to non-master processes
+MPI_Bcast
+
+// Reorganize buckets based on pivots
+Initialize num_processes empty buckets
+For each element in local_bucket:
+    Determine the appropriate bucket based on pivots
+    Place element into its corresponding bucket
+
+// Get number of elements to send to each process in order for each process to know the number of elements they are receiving from each process
+Prepare new bucket sizes
+MPI_Alltoall
+
+// Prepare and send new buckets based on pivots to its corresponding process
+Calculate send and receive displacements
+Flatten new buckets based on pivots in a single array
+MPI_Alltoallv
+
+// Sort received data from pivots of each processes' bucket
+Sort received_data
+
+// Gather sorted buckets in the master process combine them into a fully sorted array
+MPI_Gatherv
+
+// Finalize MPI
+MPI_Finalize
+```
+
 **Radix Sort**
 ```
 Initialize MPI

@@ -15,7 +15,7 @@
 ### 2a. Brief project description (what algorithms will you be comparing and on what architectures)
 
 - Bitonic Sort:
-- Sample Sort:
+- Sample Sort: A parallel sorting algorithm that works by selecting a random sample of elements from the given data to determine "pivots" or "splitters" that partitions the data into subsets. Each subset is then sorted independently and merged into a fully sorted output.
 - Merge Sort:
 - Radix Sort: A linear sorting algorithm that sorts elements by processing them digit by digit. Rather than comparing elements directly, Radix Sort distributes the elements into buckets based on each digit’s value. By repeatedly sorting the elements by their significant digits, from the least significant to the most significant, Radix Sort achieves the final sorted order. 
 
@@ -45,7 +45,7 @@ Calculate bucket sizes of each process and displacements
 // Scatter input_array to each process
 MPI_Scatterv
 
-// Sort the buckets in each process locally using a preferred sorting algorithm
+// Sort the buckets in each process locally
 Sort local_bucket
 
 // Calculate s and select s local samples from each process

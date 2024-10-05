@@ -22,6 +22,64 @@
 ### 2b. Pseudocode for each parallel algorithm
 - For MPI programs, include MPI calls you will use to coordinate between processes
 
+**Bitonic Sort**
+```
+// Initialize MPI
+MPI_Init()
+
+// Get number of processes and current process rank
+num_processes = MPI_Comm_size(MPI_COMM_WORLD)
+rank = MPI_Comm_rank(MPI_COMM_WORLD)
+
+// Get input array and ensure all processes have the size of the input array
+If rank == 0:
+	Read input array as input_array
+	n = size of input_array
+
+// Broadcast n to non-master processes
+MPI_Bcast
+
+// Create a new local array based on the number of processors
+localSize = num_processors / n
+
+// Evenly distribute chunks of A to each process using MPI_Scatter and localSize
+MPI_Scatter
+
+localArray = array of size localSize holding the contents after MPI_Scatter
+
+num_stages = log_2(P)
+
+for each stage from 1 to num_stages:
+	for each step from stage to 0:
+		// Getting partner rank to determine what process to compare and exchange with
+		partner = rank XOR step
+		ascending = true if rank / localSize is even
+ 
+        	if (rank < partner) and ascending:
+			Compare and exchange with partner to ensure ascending order (may involve MPI_Sendrecv to send and receive arrays with partner)
+
+        	else if (rank > partner) and not ascending:
+			Compare and exchange with partner to ensure descending order (may involve MPI_Sendrecv to send and receive arrays with partner)
+
+    	// Synchronize all processes after each step
+    	MPI_Barrier()
+
+// Gather the fully sorted chunks at the root process
+if rank == 0:
+	// Gather sorted chunks from all processes into A
+	MPI_Gather
+
+	// Print out A
+	for element in A:
+		print(element)
+else:
+	// Gather local sorted array
+	MPI_Gather
+
+// Finalize MPI
+MPI_Finalize
+```
+
 **Sample Sort**
 ```
 // Initialize MPI

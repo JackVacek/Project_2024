@@ -165,33 +165,32 @@ sizeOfArray = input from user
 // create various variables for number of tasks, workers, source, dest, etc. (and buffers)
 numtasks, numworkers, source, dest, timing variables
 
+//make the unsorted array of desired size
+for loop to make the overall array
+
 // Initialize MPI
 MPI_Init
 MPI_Comm_rank
 MPI_Comm_size
 
-// if it is the master, make array
-for loop to make the overall array
+// how many elements each process is working with
+amount = elements / processes
 
 // evenly split the arrays along available processes with MPI_Scatter
 MPI_Scatter
 
-// sort master's work
-localmergesort
+// make each process do mergesort locally
+localMergeSort
 
-// push to overall result
-overallResultUpdate
+//get all the information from the number of processes into overall list
+MPI_Gather
 
-// get all information from other workers
-for all of the number of tasks - the one we just did
-MPI_Recv
+//if the master program, then we will merge all the elements into overall, final array
+if master:
+	localMergeSort
 
-// merge the worker array with the global one
-merge
-
-// if worker task, then locally sort and send to master
-localmergesort
-MPI_Send
+//make sure everything is synced
+MPI_Barrier
 
 // Finalize MPI
 MPI_Finalize

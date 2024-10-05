@@ -58,10 +58,16 @@ for each stage from 1 to num_stages:
 		ascending = true if rank / localSize is even
  
         	if (rank < partner) and ascending:
-			Compare and exchange with partner to ensure ascending order (may involve MPI_Sendrecv to send and receive arrays with partner)
+			// Use MPI_SendRecv to exchange array data with partner
+			MPI_SendRecv
+
+			Compare and exchange with partner to ensure ascending order
 
         	else if (rank > partner) and not ascending:
-			Compare and exchange with partner to ensure descending order (may involve MPI_Sendrecv to send and receive arrays with partner)
+			// Use MPI_SendRecv to exchange array data with partner
+			MPI_SendRecv
+
+			Compare and exchange with partner to ensure descending order
 
     	// Synchronize all processes after each step
     	MPI_Barrier()

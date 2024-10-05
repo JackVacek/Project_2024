@@ -47,12 +47,14 @@ MPI_Scatter
 
 localArray = array of size localSize holding the contents after MPI_Scatter
 
+sort localArray in ascending order if rank / localSize is even otherwise sort descending
+
 num_stages = log_2(P)
 
 for each stage from 1 to num_stages:
 	for each step from stage to 0:
 		// Getting partner rank to determine what process to compare and exchange with
-		partner = rank XOR step
+		partner = rank ^ step
 		ascending = true if rank / localSize is even
  
         	if (rank < partner) and ascending:

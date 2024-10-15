@@ -3,6 +3,7 @@
   #include <cmath>
   #include <random>
   #include <algorithm>
+  #include <vector>
 
   #include "mpi.h"
 
@@ -27,10 +28,9 @@
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       n = stoi(argv[1]);
 
-      int* input_array = nullptr;
+      vector<int> input_array(n);
       if (rank == 0) {
           srand(0);
-          input_array = new int[n];
           for (int i = 0; i < n; i++) {
               input_array[i] = rand() % (n/4);
           }
@@ -38,11 +38,11 @@
       
       // Create a new local array based on the number of processors
       int localSize = n / num_processes;
-      int* localArray = new int[localSize];
+      vector<int> localArray(localSize);
 
       // Distribute the input array to all processes
-      MPI_Scatter(input_array, localSize, MPI_INT, localArray, localSize, MPI_INT, MASTER, MPI_COMM_WORLD);
-      sort(localArray, localArray + localSize);
+      MPI_Scatter(input_array.data(), localSize, MPI_INT, localArray.data(), localSize, MPI_INT, MASTER, MPI_COMM_WORLD);
+      sort(localArray.begin(), localArray.end());
 
       int num_stages = log2(num_processes);
 
@@ -55,11 +55,11 @@
               int group = rank / group_size;
               bool ascending = (group % 2 == 0);
 
-              int* partner_arr = new int[localSize];
-              MPI_Sendrecv(localArray, localSize, MPI_INT, partner_rank, 0, partner_arr, localSize, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+              vector<int> partner_arr(localSize);
+              MPI_Sendrecv(localArray.data(), localSize, MPI_INT, partner_rank, 0, partner_arr.data(), localSize, MPI_INT, partner_rank, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
               // Merge the local array with the partner array (while maintaining sorted order)
-              int* merged = new int[localSize * 2];
+              vector<int> merged(localSize * 2);
               int i = 0, j = 0, k = 0;
 
               while (i < localSize && j < localSize) {
@@ -88,16 +88,11 @@
                       localArray[i] = merged[i + localSize];
                   }
               }
-
-
-              delete[] partner_arr;
-              delete[] merged;
-
           }
           MPI_Barrier(MPI_COMM_WORLD);
       }
 
-      MPI_Gather(localArray, localSize, MPI_INT, input_array, localSize, MPI_INT, MASTER, MPI_COMM_WORLD);
+      MPI_Gather(localArray.data(), localSize, MPI_INT, input_array.data(), localSize, MPI_INT, MASTER, MPI_COMM_WORLD);
 
       if (rank == MASTER) {
           bool sorted = true;
@@ -113,11 +108,7 @@
           } else {
               cout << "Array is not sorted" << endl;
           }
-          // printArray(input_array, n);
-          delete[] input_array;
       }
-
-      delete[] localArray;
 
       MPI_Finalize();
       return 0;

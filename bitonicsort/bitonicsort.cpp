@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
     int num_processes, rank, n;
     MPI_Comm_size(MPI_COMM_WORLD, &num_processes);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
     n = stoi(argv[1]);
     string input_type = argv[2];
 
@@ -37,15 +38,14 @@ int main(int argc, char** argv) {
     int localSize = n / num_processes;
     int* localArray = new int[localSize];
 
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<int> totalDis(0, n/4);
-    uniform_int_distribution<int> localDis(0, localSize - 1);
-
     cali::ConfigManager mgr;
     mgr.start();
 
     CALI_MARK_BEGIN("data_init_runtime");
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> totalDis(0, n/4);
+    uniform_int_distribution<int> localDis(0, localSize - 1);
     if (input_type == "Random") {
         for (int i = 0; i < localSize; i++) {
             localArray[i] = totalDis(gen);

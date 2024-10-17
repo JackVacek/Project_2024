@@ -37,13 +37,18 @@ int main(int argc, char** argv) {
     int localSize = n / num_processes;
     int* localArray = new int[localSize];
 
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> totalDis(0, n/4);
+    uniform_int_distribution<int> localDis(0, localSize - 1);
+
     cali::ConfigManager mgr;
     mgr.start();
 
     CALI_MARK_BEGIN("data_init_runtime");
     if (input_type == "Random") {
         for (int i = 0; i < localSize; i++) {
-            localArray[i] = rand() % n;
+            localArray[i] = totalDis(gen);
         }
     } else if (input_type == "Sorted") {
         for (int i = 0; i < localSize; i++) {
@@ -58,12 +63,10 @@ int main(int argc, char** argv) {
             localArray[i] = i + rank * localSize;
         }
 
-        int numPerturbed = localSize / 100;
-
-        for (int i = 0; i < numPerturbed; ++i) {
-            int idx1 = rand() % localSize;
-            int idx2 = rand() % localSize;
-            std::swap(localArray[idx1], localArray[idx2]);
+        for (int i = 0; i < localSize; i++) {
+            if (localDis(gen) == 0) { // approximately 1% chance
+                localArray[i] = totalDis(gen) * 1000;
+            }
         }
     }
     CALI_MARK_END("data_init_runtime");
@@ -195,7 +198,7 @@ int main(int argc, char** argv) {
         adiak::value("input_size", n); // The number of elements in input dataset (1000)
         adiak::value("input_type", input_type); // For sorting, this would be choices: ("Sorted", "ReverseSorted", "Random", "1_perc_perturbed")
         adiak::value("num_procs", num_processes); // The number of processors (MPI ranks)
-        adiak::value("scalability", "strong"); // The scalability of your algorithm. choices: ("strong", "weak")
+        adiak::value("scalability", "weak"); // The scalability of your algorithm. choices: ("strong", "weak")
         adiak::value("group_num", "1"); // The number of your group (integer, e.g., 1, 10)
         adiak::value("implementation_source", "handwritten"); // Where you got the source code of your algorithm. choices: ("online", "ai", "handwritten").
     }

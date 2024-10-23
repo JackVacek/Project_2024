@@ -473,7 +473,20 @@ implementation_source: handwritten
 
 **Merge Sort Example Metadata**
 ```
-
+launchdate: 1729128347
+libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
+cmdline: [./mergesort, 4194304, Random]	
+cluster: c
+algorithm: merge
+programming_model: mpi
+data_type: int
+size_of_data_type: 4
+input_size: 4194304
+input_type: Random
+num_procs: 32
+scalability: strong
+group_num: 1	
+implementation_source: online/ai
 ```
 
 **Radix Sort Example Metadata**

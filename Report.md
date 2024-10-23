@@ -586,6 +586,13 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
 
 **Radix Sort Main Graphs**
+![Main Times 65536](./radixsort/main_graphs/main_input_size_65536.png)
+![Main Times 262144](./radixsort/main_graphs/main_input_size_262144.png)
+![Main Times 1048576](./radixsort/main_graphs/main_input_size_1048576.png)
+![Main Times 4194304](./radixsort/main_graphs/main_input_size_4194304.png)
+![Main Times 16777216](./radixsort/main_graphs/main_input_size_16777216.png)
+![Main Times 67108864](./radixsort/main_graphs/main_input_size_67108864.png)
+![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
 
 ## 5. Presentation
 Plots for the presentation should be as follows:

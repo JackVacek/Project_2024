@@ -586,10 +586,10 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
 
 **Merge Sort Graphs**
-![Main_times_1048576_Random](main_input_size_1048576_Random.png)
-![Main_times_1048576_Sorted](main_input_size_1048576_Sorted.png)
-![Main Times 67108864_Sorted](main_input_size_67108864_Sorted.png)
-![Main_times_67108864_Random](main_input_size_67108864_Random.png)
+![Main_times_1048576_Random](./mergesort/Graphs/main_input_size_1048576_Random.png)
+![Main_times_1048576_Sorted](./mergesort/Graphs/main_input_size_1048576_Sorted.png)
+![Main Times 67108864_Sorted](./mergesort/Graphs/main_input_size_67108864_Sorted.png)
+![Main_times_67108864_Random](./mergesort/Graphs/main_input_size_67108864_Random.png)
 
 **Analysis**
 

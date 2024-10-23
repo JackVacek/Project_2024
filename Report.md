@@ -603,10 +603,6 @@ This makes sense as you have to rely more on computing on the large scale than t
 ![Main Times 65536](./radixsort/main_graphs/main_input_size_65536.png)
 ![Main Times 262144](./radixsort/main_graphs/main_input_size_262144.png)
 ![Main Times 1048576](./radixsort/main_graphs/main_input_size_1048576.png)
-![Main Times 4194304](./radixsort/main_graphs/main_input_size_4194304.png)
-![Main Times 16777216](./radixsort/main_graphs/main_input_size_16777216.png)
-![Main Times 67108864](./radixsort/main_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
 
 ## 5. Presentation
 Plots for the presentation should be as follows:

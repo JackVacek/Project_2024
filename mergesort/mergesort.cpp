@@ -4,9 +4,7 @@
 #include <limits.h>
 #include <ctime>
 #include <algorithm>
-#include <cmath>
 #include <random>
-#include <chrono>
 #include <string>
 #include <iostream>
 
@@ -23,11 +21,13 @@ void choose_array_type(int *a, std::string type, int sizeOfArray)
     // std::cout << "The array type is: " << type << std::endl;
     if (type == "Random")
     {
-        // random
-        std::srand(std::time(NULL));
-        for (int i = 0; i < sizeOfArray; i++)
+        // Random
+        std::mt19937 gen(static_cast<unsigned int>(std::time(0)));
+        std::uniform_int_distribution<> dist(1, sizeOfArray);
+
+        for (int i = 0; i < sizeOfArray; ++i)
         {
-            a[i] = std::rand() % sizeOfArray + 1;
+            a[i] = dist(gen);
         }
     }
     if (type == "ReverseSorted")
@@ -37,37 +37,39 @@ void choose_array_type(int *a, std::string type, int sizeOfArray)
         int index = 0;
         for (int i = sizeOfArray - 1; i >= 0; --i)
         {
-            a[index] = i;
+            a[index] = i + 1;
             index += 1;
         }
     }
-    if (type == "1_perc_perturbed" || type == "Sorted")
+
+    if (type == "1_perc_perturbed")
+    {
+        // 1% perturbed
+        std::mt19937 gen(static_cast<unsigned int>(std::time(0)));
+        std::uniform_int_distribution<> dist(1, sizeOfArray);
+        std::uniform_int_distribution<> perturb(0, 99);
+
+        for (int i = 0; i < sizeOfArray; ++i)
+        {
+            if (perturb(gen) == 0)
+            {
+                a[i] = dist(gen);
+            }
+            else
+            {
+                a[i] = i + 1;
+            }
+        }
+    }
+    if (type == "Sorted")
     {
         // sorted
         for (int i = 0; i < sizeOfArray; i++)
         {
-            a[i] = i;
-        }
-        if (type == "1_perc_perturbed")
-        {
-            // 1% perturbed
-            int elements_to_perturb = std::max(1, static_cast<int>(std::ceil(0.01 * sizeOfArray)));
-            unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-            std::default_random_engine rng(seed);
-            int indicesToChange[sizeOfArray];
-            for (int i = 0; i < sizeOfArray; ++i)
-            {
-                indicesToChange[i] = i;
-            }
-            std::shuffle(indicesToChange, indicesToChange + sizeOfArray, rng);
-            for (int i = 0; i < elements_to_perturb; ++i)
-            {
-                int original_index = indicesToChange[i];
-                int new_index = indicesToChange[(i + 1) % sizeOfArray];
-                std::swap(a[original_index], a[new_index]);
-            }
+            a[i] = i + 1;
         }
     }
+
     // std::cout << "printing array" << std::endl;
     // for (int i = 0; i < sizeOfArray; ++i)
     //{
@@ -76,29 +78,24 @@ void choose_array_type(int *a, std::string type, int sizeOfArray)
     // std::cout << std::endl;
 }
 
-void correctness_checker(int *global, int sizeOfArray)
+bool correctness_checker(int *global, int sizeOfArray)
 {
     // std::cout << "Checking to see if the program is correct" << std::endl;
     //  calculate if the program is correct
-    bool isCorrect = true;
     for (int i = 0; i < sizeOfArray - 1; i++)
     {
-        if (global[i] > global[i + 1])
+        if (global[i] > global[i + 1] || global[i] < 1 || global[i] > sizeOfArray || global[i + 1] < 1 || global[i + 1] > sizeOfArray)
         {
-            printf("The program is incorrect\n");
-            isCorrect = false;
-            break;
+            // printf("The program is incorrect\n");
+            return false;
         }
         // std::cout << global[i] << " ";
     }
     // std::cout << global[sizeOfArray - 1] << std::endl;
-    if (isCorrect)
-    {
-        printf("The program is correct\n");
-    }
+    return true;
 }
 
-void merge(int arr[], int left, int mid, int right)
+void merge(int *arr, int left, int mid, int right)
 {
     int endFirst = mid - left + 1;
     int endSecond = right - mid;
@@ -151,7 +148,7 @@ void merge(int arr[], int left, int mid, int right)
     delete[] secondHalf;
 }
 
-void mergeSort(int arr[], int left, int right)
+void mergeSort(int *arr, int left, int right)
 {
     if (left >= right)
     {
@@ -199,9 +196,9 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &taskid);   // get process id
     MPI_Comm_size(MPI_COMM_WORLD, &numtasks); // get number of processes
 
-    int a[sizeOfArray];
-    int localArrays[(sizeOfArray / numtasks)];
+    int *a = new int[sizeOfArray];
     int localArraySize = sizeOfArray / numtasks;
+    int *localArrays = new int[localArraySize];
     // std::cout << localArraySize << std::endl;
     cali::ConfigManager mgr;
     mgr.start();
@@ -218,6 +215,11 @@ int main(int argc, char *argv[])
         CALI_MARK_BEGIN(data_init_runtime);
         choose_array_type(a, typeOfArray, sizeOfArray);
         CALI_MARK_END(data_init_runtime);
+        // for (int i = 0; i < sizeOfArray; ++i)
+        //{
+        //    std::cout << a[i] << " ";
+        //}
+        // std::cout << std::endl;
     }
     CALI_MARK_BEGIN(comm);
     CALI_MARK_BEGIN(comm_large);
@@ -247,10 +249,25 @@ int main(int argc, char *argv[])
         }
         CALI_MARK_END(comp_large);
         CALI_MARK_END(comp);
+        bool isCorrect = false;
         CALI_MARK_BEGIN(correctness_check);
-        correctness_checker(a, sizeOfArray);
+        isCorrect = correctness_checker(a, sizeOfArray);
         CALI_MARK_END(correctness_check);
+        if (isCorrect)
+        {
+            printf("The program is correct\n");
+        }
+        else
+        {
+            printf("The program is incorrect\n");
+        }
+        // for (int i = 0; i < sizeOfArray; ++i)
+        //{
+        //     std::cout << a[i] << " ";
+        // }
+        // std::cout << std::endl;
     }
+
     mgr.stop();
     mgr.flush();
 
@@ -266,9 +283,11 @@ int main(int argc, char *argv[])
     adiak::value("input_size", sizeOfArray);            // The number of elements in input dataset (1000)
     adiak::value("input_type", typeOfArray);            // For sorting, this would be choices: ("Sorted", "ReverseSorted", "Random", "1_perc_perturbed")
     adiak::value("num_procs", numtasks);                // The number of processors (MPI ranks)
-    adiak::value("scalability", "strong");              // The scalability of your algorithm. choices: ("strong", "weak")
+    adiak::value("scalability", "weak");                // The scalability of your algorithm. choices: ("strong", "weak")
     adiak::value("group_num", 1);                       // The number of your group (integer, e.g., 1, 10)
-    adiak::value("implementation_source", "online/ai"); // Where you got the source code of your algorithm. choices: ("online", "ai", "handwritten").
+    adiak::value("implementation_source", "online/ai/handwritten"); // Where you got the source code of your algorithm. choices: ("online", "ai", "handwritten").
 
+    delete[] a;
+    delete[] localArrays;
     MPI_Finalize();
 }

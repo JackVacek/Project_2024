@@ -532,6 +532,18 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
     - Total time
     - Variance time/rank
 
+**Bitonic Sort Main Graphs**
+![Main Times 65536](./bitonicsort/main_graphs/main_input_size_65536.png)
+![Main Times 262144](./bitonicsort/main_graphs/main_input_size_262144.png)
+![Main Times 1048576](./bitonicsort/main_graphs/main_input_size_1048576.png)
+![Main Times 4194304](./bitonicsort/main_graphs/main_input_size_4194304.png)
+![Main Times 16777216](./bitonicsort/main_graphs/main_input_size_16777216.png)
+![Main Times 67108864](./bitonicsort/main_graphs/main_input_size_67108864.png)
+![Main Times 268435456](./bitonicsort/main_graphs/main_input_size_268435456.png) 
+
+**Analysis**
+
+
 **Sample Sort Main Graphs**
 ![Main Times 65536](./samplesort/main_graphs/main_input_size_65536.png)
 ![Main Times 262144](./samplesort/main_graphs/main_input_size_262144.png)

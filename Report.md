@@ -390,7 +390,21 @@ CALI_MARK_END("comp");
 
 **Merge Sort Example Calltree**
 ```
-
+2.27236 main
+├─ 0.51182 MPI_Comm_dup
+├─ 0.00001 MPI_Finalize
+├─ 0.00001 MPI_Finalized
+├─ 0.00004 MPI_Init
+├─ 0.00001 MPI_Initialized
+├─ 0.09589 comm
+│  └─ 0.09586 comm_large
+│     ├─ 0.00047 MPI_Gather
+│     └─ 0.09535 MPI_Scatter
+├─ 0.05614 comp
+│  ├─ 0.50816 comp_large
+│  └─ 0.04023 comp_small
+├─ 0.01107 correctness_check
+└─ 0.09147 data_init_runtime
 ```
 
 **Radix Sort Example Calltree**

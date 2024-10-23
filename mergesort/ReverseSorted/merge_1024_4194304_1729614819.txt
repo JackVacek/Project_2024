@@ -1,0 +1,148 @@
+
+Inactive Modules:
+  1) UCX/1.9.0     2) numactl/2.0.13
+
+Due to MODULEPATH changes, the following have been reloaded:
+  1) binutils/2.35     2) zlib/1.2.11
+
+The following have been reloaded with a version change:
+  1) GCCcore/10.2.0 => GCCcore/8.3.0
+
+[bstrap:0:-1@c216.cluster] check_exit_codes (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:117): unable to run bstrap_proxy on c217 (pid 24709, exit code 49152)
+[bstrap:0:-1@c216.cluster] poll_for_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:159): check exit codes error
+[bstrap:0:-1@c216.cluster] HYD_dmx_poll_wait_for_proxy_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:212): poll for event error
+[bstrap:0:-1@c216.cluster] HYD_bstrap_setup (../../../../../src/pm/i_hydra/libhydra/bstrap/src/intel/i_hydra_bstrap.c:772): error waiting for event
+[bstrap:0:-1@c216.cluster] upstream_cb (../../../../../src/pm/i_hydra/libhydra/bstrap/src/hydra_bstrap_proxy.c:345): error setting up the bstrap proxies
+[bstrap:0:-1@c216.cluster] HYDI_dmx_poll_wait_for_event (../../../../../src/pm/i_hydra/libhydra/demux/hydra_demux_poll.c:80): callback returned error status
+srun: error: c216: task 5: Exited with exit code 5
+[bstrap:0:-1@c216.cluster] main (../../../../../src/pm/i_hydra/libhydra/bstrap/src/hydra_bstrap_proxy.c:594): error sending proxy ID upstream
+slurmstepd: error: *** STEP 11782628.0 ON c165 CANCELLED AT 2024-10-22T15:10:59 DUE TO TIME LIMIT ***
+slurmstepd: error: *** JOB 11782628 ON c165 CANCELLED AT 2024-10-22T15:10:59 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 11782628.2 ON c201 CANCELLED AT 2024-10-22T15:10:59 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 11782628.1 ON c211 CANCELLED AT 2024-10-22T15:10:59 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 11782628.6 ON c215 CANCELLED AT 2024-10-22T15:10:59 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 11782628.4 ON c203 CANCELLED AT 2024-10-22T15:10:59 DUE TO TIME LIMIT ***
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 611 PID 251893 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 612 PID 251894 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 613 PID 251895 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 188 PID 176341 RUNNING AT c202
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 614 PID 251896 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 615 PID 251897 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 616 PID 251898 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 189 PID 176342 RUNNING AT c202
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 617 PID 251899 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 618 PID 251900 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 190 PID 176343 RUNNING AT c202
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 191 PID 176344 RUNNING AT c202
+===================================================================================
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 619 PID 251901 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 282 PID 276693 RUNNING AT c209
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 620 PID 251902 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 192 PID 176345 RUNNING AT c202
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 283 PID 276694 RUNNING AT c209
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 193 PID 176346 RUNNING AT c202
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 284 PID 276695 RUNNING AT c209
+=   KILLED BY SIGNAL: 15 (Terminated)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 194 PID 176347 RUNNING AT c202
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 621 PID 251903 RUNNING AT c223
+=   KILLED BY SIGNAL: 15 (Terminated)
+[mpiexec@c165.cluster] HYD_sock_wri

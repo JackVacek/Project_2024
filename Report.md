@@ -541,6 +541,11 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 ![Main Times 67108864](./samplesort/main_graphs/main_input_size_67108864.png)
 ![Main Times 268435456](./samplesort/main_graphs/main_input_size_268435456.png) 
 
+**Analysis:**
+- For these graphs, we can see that the trends change as the input size increases. This is because as the input size increases, the communication overhead begins to go away. For the first three graphs, we see that the times it take for communication overtakes the computation time. Since there are more processes to communicate between, the main time would increase as the number of processes increases. In the fourth graph, you can see that the communcation times and computation times begin to even out where computation times begin to matter more. This is noticeable throughout Min, Max, and Avg times per rank. The trend becomes something more linear and constant. For the final three graphs, we can see that computation completely overtakes communication times and the trend changes. We see that the time it takes to compute the data decreases as the number of processes increases. This is because the data is split up more and more, so the computation time decreases. The average time per rank gives a better look at these trends, but minimum and maximum times follows around the same trend with some outliers.
+- For total time, the trends are mostly linearly increasing because there are more processes. More processes means for times to add for each process, so the total time increases.
+- For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
+
 ## 5. Presentation
 Plots for the presentation should be as follows:
 - For each implementation:

@@ -342,6 +342,45 @@ CALI_MARK_END("comp");
 └─ 0.440 correctness_check
 ```
 
+**Bitonic Sort Example Calltree**
+```
+
+```
+
+**Sample Sort Example Calltree**
+```
+1.686 main
+├─ 0.000 MPI_Init
+├─ 0.010 data_init_runtime
+├─ 0.108 comp
+│  ├─ 0.107 comp_large
+│  └─ 0.001 comp_small
+├─ 0.016 comm
+│  ├─ 0.012 comm_small
+│  │  ├─ 0.011 MPI_Allgather
+│  │  └─ 0.001 MPI_Alltoall
+│  └─ 0.004 comm_large
+│     └─ 0.004 MPI_Alltoallv
+├─ 0.021 correctness_check
+│  ├─ 0.000 MPI_Send
+│  ├─ 0.020 MPI_Recv
+│  └─ 0.000 MPI_Allreduce
+├─ 0.000 MPI_Finalize
+├─ 0.000 MPI_Initialized
+├─ 0.000 MPI_Finalized
+└─ 0.000 MPI_Comm_dup
+```
+
+**Merge Sort Example Calltree**
+```
+
+```
+
+**Radix Sort Example Calltree**
+```
+
+```
+
 ### 3b. Collect Metadata
 
 Have the following code in your programs to collect metadata:
@@ -364,6 +403,39 @@ adiak::value("implementation_source", implementation_source); // Where you got t
 ```
 
 They will show up in the `Thicket.metadata` if the caliper file is read into Thicket.
+
+**Bitonic Sort Example Metadata**
+```
+
+```
+
+**Sample Sort Example Metadata**
+```
+launchdate: 1729125502
+libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
+cmdline: ['./samplesort', '4194304', 'Random']
+cluster: c
+algorithm: sample
+programming_model: mpi
+data_type: int
+size_of_data_type: 4
+input_size: 4194304
+input_type: Random
+num_procs: 32
+scalability: strong
+group_num: 1
+implementation_source: handwritten
+```
+
+**Merge Sort Example Metadata**
+```
+
+```
+
+**Radix Sort Example Metadata**
+```
+
+```
 
 ### **See the `Builds/` directory to find the correct Caliper configurations to get the performance metrics.** They will show up in the `Thicket.dataframe` when the Caliper file is read into Thicket.
 ## 4. Performance evaluation

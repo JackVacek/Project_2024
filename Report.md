@@ -344,7 +344,24 @@ CALI_MARK_END("comp");
 
 **Bitonic Sort Example Calltree**
 ```
-
+1.68131 main
+├─ 0.00004 MPI_Init
+├─ 0.00286 data_init_runtime
+├─ 0.06696 comp
+│  ├─ 0.06663 comp_large
+│  └─ 0.00008 comp_small
+├─ 0.02028 comm
+│  ├─ 0.00941 comm_large
+│  │  └─ 0.00926 MPI_Sendrecv
+│  └─ 0.01073 MPI_Barrier
+├─ 0.00065 correctness_check
+│  ├─ 0.00013 MPI_Send
+│  ├─ 0.00003 MPI_Recv
+│  └─ 0.00009 MPI_Allreduce
+├─ 0.00000 MPI_Finalize
+├─ 0.00001 MPI_Initialized
+├─ 0.00001 MPI_Finalized
+└─ 0.00083 MPI_Comm_dup
 ```
 
 **Sample Sort Example Calltree**
@@ -406,7 +423,20 @@ They will show up in the `Thicket.metadata` if the caliper file is read into Thi
 
 **Bitonic Sort Example Metadata**
 ```
-
+launchdate: 1729089590
+libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
+cmdline: ['./bitonicsort', '4194304', 'Random']
+cluster: c
+algorithm: bitonic
+programming_model: mpi
+data_type: int
+size_of_data_type: 4
+input_size: 4194304
+input_type: Random
+num_procs: 32
+scalability: strong
+group_num: 1
+implementation_source: handwritten
 ```
 
 **Sample Sort Example Metadata**

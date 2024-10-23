@@ -503,7 +503,20 @@ implementation_source: online/ai
 
 **Radix Sort Example Metadata**
 ```
-
+launchdate: 1729641751
+libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
+cmdline: ['./radixsort', '1048576', 'Random']
+cluster: c
+algorithm: radix
+programming_model: mpi
+data_type: int
+size_of_data_type: 4
+input_size: 1048576
+input_type: Random
+num_procs: 2
+scalability: weak
+group_num: 1
+implementation_source: handwritten
 ```
 
 ### **See the `Builds/` directory to find the correct Caliper configurations to get the performance metrics.** They will show up in the `Thicket.dataframe` when the Caliper file is read into Thicket.

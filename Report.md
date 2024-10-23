@@ -585,6 +585,20 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 - For total time, the trends are mostly linearly increasing because there are more processes. More processes means for times to add for each process, so the total time increases.
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
 
+**Merge Sort Graphs**
+![Main_times_1048576_Random](main_input_size_1048576_Random.png)
+![Main_times_1048576_Sorted](main_input_size_1048576_Sorted.png)
+![Main Times 67108864_Sorted](main_input_size_67108864_Sorted.png)
+![Main_times_67108864_Random](main_input_size_67108864_Random.png)
+
+**Analysis**
+
+For my algorithm, unfortunately, as you increase the number of processes on the same problem size, the average time per node increases. I think that this could be due to the way that I collect the results from
+each thread. I use gather, which causes all of the threads to get their result before trying to sort the global array. Due to the increase in the number of threads, this causes an increase in the waiting time
+for each of them. I was also unable to generate all of the caliper files for this part as of now due to the Grace cluster not allowing for me to run my jobs I queued. I had them queued for ~12 hours and they never ran.
+I will continue to run them after this to make sure that I have the results I need. If you look at the computation large in my Graphs file under merge sort, you can see that it increases with the number of processes.
+This makes sense as you have to rely more on computing on the large scale than the small scale. (https://github.com/JackVacek/Project_2024/tree/main/mergesort/Graphs). As you increase the overall thread, the master thread has to compute the final results from all of the threads.
+
 **Radix Sort Main Graphs**
 ![Main Times 65536](./radixsort/main_graphs/main_input_size_65536.png)
 ![Main Times 262144](./radixsort/main_graphs/main_input_size_262144.png)

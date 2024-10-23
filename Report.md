@@ -409,7 +409,19 @@ CALI_MARK_END("comp");
 
 **Radix Sort Example Calltree**
 ```
-
+0.50797 main
+├─ 0.02925 MPI_Comm_dup
+├─ 0.00001 MPI_Finalize
+├─ 0.00001 MPI_Finalized
+├─ 0.00004 MPI_Init
+├─ 0.00001 MPI_Initialized
+├─ 0.00143 comm
+│  └─ 0.00142 comm_large
+│     └─ 0.00139 MPI_Gather
+├─ 0.12496 comp
+│  └─ 0.12492 comp_large
+├─ 0.00783 correctness_check
+└─ 0.03707 data_init_runtime
 ```
 
 ### 3b. Collect Metadata

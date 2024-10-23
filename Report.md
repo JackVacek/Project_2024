@@ -409,7 +409,19 @@ CALI_MARK_END("comp");
 
 **Radix Sort Example Calltree**
 ```
-
+0.50797 main
+├─ 0.02925 MPI_Comm_dup
+├─ 0.00001 MPI_Finalize
+├─ 0.00001 MPI_Finalized
+├─ 0.00004 MPI_Init
+├─ 0.00001 MPI_Initialized
+├─ 0.00143 comm
+│  └─ 0.00142 comm_large
+│     └─ 0.00139 MPI_Gather
+├─ 0.12496 comp
+│  └─ 0.12492 comp_large
+├─ 0.00783 correctness_check
+└─ 0.03707 data_init_runtime
 ```
 
 ### 3b. Collect Metadata
@@ -491,7 +503,20 @@ implementation_source: online/ai
 
 **Radix Sort Example Metadata**
 ```
-
+launchdate: 1729641751
+libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
+cmdline: ['./radixsort', '1048576', 'Random']
+cluster: c
+algorithm: radix
+programming_model: mpi
+data_type: int
+size_of_data_type: 4
+input_size: 1048576
+input_type: Random
+num_procs: 2
+scalability: weak
+group_num: 1
+implementation_source: handwritten
 ```
 
 ### **See the `Builds/` directory to find the correct Caliper configurations to get the performance metrics.** They will show up in the `Thicket.dataframe` when the Caliper file is read into Thicket.
@@ -532,6 +557,18 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
     - Total time
     - Variance time/rank
 
+**Bitonic Sort Main Graphs**
+![Main Times 65536](./bitonicsort/main_graphs/main_input_size_65536.png)
+![Main Times 262144](./bitonicsort/main_graphs/main_input_size_262144.png)
+![Main Times 1048576](./bitonicsort/main_graphs/main_input_size_1048576.png)
+![Main Times 4194304](./bitonicsort/main_graphs/main_input_size_4194304.png)
+![Main Times 16777216](./bitonicsort/main_graphs/main_input_size_16777216.png)
+![Main Times 67108864](./bitonicsort/main_graphs/main_input_size_67108864.png)
+![Main Times 268435456](./bitonicsort/main_graphs/main_input_size_268435456.png) 
+
+**Analysis**
+
+
 **Sample Sort Main Graphs**
 ![Main Times 65536](./samplesort/main_graphs/main_input_size_65536.png)
 ![Main Times 262144](./samplesort/main_graphs/main_input_size_262144.png)
@@ -541,10 +578,21 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 ![Main Times 67108864](./samplesort/main_graphs/main_input_size_67108864.png)
 ![Main Times 268435456](./samplesort/main_graphs/main_input_size_268435456.png) 
 
+<<<<<<< HEAD
 **Analysis:**
 - For these graphs, we can see that the trends change as the input size increases. This is because as the input size increases, the communication overhead begins to go away. For the first three graphs, we see that the times it take for communication overtakes the computation time. Since there are more processes to communicate between, the main time would increase as the number of processes increases. In the fourth graph, you can see that the communcation times and computation times begin to even out where computation times begin to matter more. This is noticeable throughout Min, Max, and Avg times per rank. The trend becomes something more linear and constant. For the final three graphs, we can see that computation completely overtakes communication times and the trend changes. We see that the time it takes to compute the data decreases as the number of processes increases. This is because the data is split up more and more, so the computation time decreases. The average time per rank gives a better look at these trends, but minimum and maximum times follows around the same trend with some outliers.
 - For total time, the trends are mostly linearly increasing because there are more processes. More processes means for times to add for each process, so the total time increases.
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
+=======
+**Radix Sort Main Graphs**
+![Main Times 65536](./radixsort/main_graphs/main_input_size_65536.png)
+![Main Times 262144](./radixsort/main_graphs/main_input_size_262144.png)
+![Main Times 1048576](./radixsort/main_graphs/main_input_size_1048576.png)
+![Main Times 4194304](./radixsort/main_graphs/main_input_size_4194304.png)
+![Main Times 16777216](./radixsort/main_graphs/main_input_size_16777216.png)
+![Main Times 67108864](./radixsort/main_graphs/main_input_size_67108864.png)
+![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
+>>>>>>> 0010d104c40cc41cb0bb90cbd36658990c0a75d1
 
 ## 5. Presentation
 Plots for the presentation should be as follows:

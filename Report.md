@@ -409,7 +409,19 @@ CALI_MARK_END("comp");
 
 **Radix Sort Example Calltree**
 ```
-
+0.50797 main
+├─ 0.02925 MPI_Comm_dup
+├─ 0.00001 MPI_Finalize
+├─ 0.00001 MPI_Finalized
+├─ 0.00004 MPI_Init
+├─ 0.00001 MPI_Initialized
+├─ 0.00143 comm
+│  └─ 0.00142 comm_large
+│     └─ 0.00139 MPI_Gather
+├─ 0.12496 comp
+│  └─ 0.12492 comp_large
+├─ 0.00783 correctness_check
+└─ 0.03707 data_init_runtime
 ```
 
 ### 3b. Collect Metadata
@@ -491,7 +503,20 @@ implementation_source: online/ai
 
 **Radix Sort Example Metadata**
 ```
-
+launchdate: 1729641751
+libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
+cmdline: ['./radixsort', '1048576', 'Random']
+cluster: c
+algorithm: radix
+programming_model: mpi
+data_type: int
+size_of_data_type: 4
+input_size: 1048576
+input_type: Random
+num_procs: 2
+scalability: weak
+group_num: 1
+implementation_source: handwritten
 ```
 
 ### **See the `Builds/` directory to find the correct Caliper configurations to get the performance metrics.** They will show up in the `Thicket.dataframe` when the Caliper file is read into Thicket.

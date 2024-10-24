@@ -608,6 +608,9 @@ This makes sense as you have to rely more on computing on the large scale than t
 ![Main Times 67108864](./radixsort/main_graphs/main_input_size_67108864.png)
 ![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
 
+**Analysis**
+For this implementation of parallelized radix sort, we can see a consistent trend across every input size, where the average runtime per node increases as the number of processes used increases. As with merge sort, MPI_Gather was used to collect all of the locally sorted partitions of the input array, and then the master process merged them all together to be sorted correctly. This inefficiency poses a significant bottleneck on potential performance gain through paralellization, and thus the performance gains on large input sizes as seen in bitonic sort and sample sort were not achieved with this algorithm. Even though computation time decreases significantly and communication overhead becomes less of an issue when more processes are used on larger input sizes, the time taken to merge all of the local arrays causes the runtime to exponentially increase overall. Trends are relatively consistent across input array types, aside from Reverse Sorted, which becomes much faster as more processes are used on larger inputs.
+
 ## 5. Presentation
 Plots for the presentation should be as follows:
 - For each implementation:

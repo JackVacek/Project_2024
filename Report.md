@@ -17,13 +17,13 @@ Our team will be using Discord to communicate with each other.
 **Algorithms Descriptions:**
 - Bitonic Sort: A parallel divide-and-conquer sorting algorithm that creates a bitonic sequence (a series of numbers that monotonically increase and then monotonically decrease) from the input data. To do this, the algorithm uses a network of comparators to perform compare-exchange operations to ensure that the sequence follows this. Then, the algorithm merges the two halves of the sequence to end with a sorted sequence. To implement this sorting algorithm, I will be using the MPI and Grace CPU architecture to parallelize the splitting and compare/swap operations.
 - Sample Sort: A parallel sorting algorithm that works by distributing the data into approximately equal-sized buckets and then sorting each bucket. A random sample of elements is then selected from the given data to determine "pivots" or "splitters" that partitions the data into subsets. Each subset is then sorted independently and merged into a fully sorted output. To run this Sample Sort algorithm, the Grace cluster will be used along with the MPI library, which will serve as the framework for communication between processors/nodes and for the parallelization of the sorting process in general. 
-- Merge Sort: A sorting algorithm that uses the divide-and-conquer strategy. This is done by splitting the array down into halves until there is one element left, thus sorting it by default. It then merges these sublists back in sorted order until the original list is sorted. This sorting algorithm is parallelized by splitting the original list down to the number of cores and then sorting those lists in parallel, merging the two halves by the "parent" of those processes and going all the way up back to the original list. I will be doing this using MPI to communicate between processes and HPRC Grace CPU architecture to parallelize the sorting of this algorithm.
+- Merge Sort: A sorting algorithm that uses the divide-and-conquer strategy. This is done by splitting the array down into halves until there is one element left, thus sorting it by default. It then merges these sublists back in sorted order until the original list is sorted. This sorting algorithm is parallelized by splitting the original list down to the number of cores and then sorting those lists in parallel, merging two processes and going all the way up back to the original list. I will be doing this using MPI to communicate between processes and HPRC Grace CPU architecture to parallelize the sorting of this algorithm.
 - Radix Sort: A linear sorting algorithm that sorts elements by processing them digit by digit. Rather than comparing elements directly, Radix Sort distributes the elements into buckets based on each digit’s value. By repeatedly sorting the elements by their significant digits, from the least significant to the most significant, Radix Sort achieves the final sorted order. To implement this algorithm, I will be using the MPI library to facilitate communication between processes and the Grace CPU architecture to parallelize this.
 
 **Source Code Descriptions:**
 - Bitonic Sort: In this implentation of Bitionic Sort, MPI is initialized and the number of processes and rank of the current process is obtained. It also accepts two command line arguments: n, the total number of elements we're going to generate & sort, and input_type, which (Random, Sorted, ReverseSorted, or 1% perturbed). Based on this, each process independently creates a local array of size n/num_processes and initializes the array based on the input type. With this, each process has its own local data set, which forms the entire input if put together. Next, each process sorts its own localArray in ascending order to set up the merging procedure in bitonic sort. After that, we go into our nested loop, which goes through a series of log2(num_processes) stages and steps. In each step, the current process and it's partner are paired up to compare and exchange with each other using the XOR operator, which lets each process pair with a different partner in each step. After that, each process sends over its local array with its partner and vice versa. The two sorted arrays are merged together in a way that the sorted property remains and, depending on the direction of the sort, the current process's rank and its partner's rank, either the lower half or the upper half of the merged array is kept. After each stage, there is a barrier that waits for all processes to finish before proceeding to the next one. Finally, in the correctness check, each process checks to see if its local array is sorted and that the next rank is larger than the current one. 
 - Sample Sort: In this implementation of Sample Sort, each process independently generates its own portion of the input data based on the specified type (random, sorted, reverse sorted, or 1% perturbed). Each processor has its own local data set where collectively, the entire input is formed. Since the data is already split between processors, the first step of Sample Sort is complete after generation. Next, each processor sorts its local data. After sorting, samples are chosen for each processor's local data. Oversampling is utilized in this algorithm for better scaling and to provide samples that better represent the data itself. Each processor selects *k * num_procs* evenly spaced samples from its sorted local data, where *k* is the oversampling factor and *num_procs* is the number of processors. The local samples are then gathered from all processors into a global sample array. The global sample array is then sorted, and *num_procs - 1* pivots are selected at evenly spaced intervals to divide the data range into num_procs buckets. After selecting the pivots from the samples, each processor partitions its sorted local data into these buckets based on the pivots. The buckets are then exchanged between the processors to ensure each processor gets the values with their respective bucket. Each processor now has the data that falls within its assigned range based off of the selected pivots. After the data exchange, each processor performs a final sort on its local dataset and the data as a whole is checked to ensure it is sorted across all processors.
-- Merge Sort: In this implementation of Merge Sort, the user passes in through the command line arguments the number of processes, size of the array, and what type of input data (random, sorted, reverse sorted, or 1% perturbed). After reading these inputs, the choose_array_type method is called in the master process to generate the data to be sorted. Once this data is generated and populated into the array, MPI_Scatter is called to break the array into equal pieces for each of the processes to sort individually. With each process having equal parts, they will all call a sequential version of merge sort. This is due to having more data than processes, so each process receives a smaller version of the overall problem to parallelize the computation. Each process will individually sort their local array and then their results will be gathered into the overall array, overwriting the data previously contianed in that array. MPI_Gather is called to gather the results from the individual processes to store them into the overall array. Then in the master process, the merge function is called to sort the overall array correctly by choosing the correct indices. Once the overall array is merged, the correctness_checker function is called to determine whether or not the overall array was sorted. It will print out that the program is correct if it was sorted correctly.
+- Merge Sort: In this implementation of Merge Sort, the user passes in through the command line arguments the number of processes, size of the array, and what type of input data (random, sorted, reverse sorted, or 1% perturbed). After reading these inputs, the choose_array_type method is called in each process to generate the data to be sorted for their subsection of the overall array. This is due to having more data than processes, so each process receives a smaller version of the overall problem to parallelize the computation. Once this data is generated and populated into the array, they will all call a sequential version of merge sort. Each process will individually sort their local array and then merge together in a tree and pair-like fashion. We first have a step variable to keep track of the distance between each task that we are merging and then a loop to make sure that we process each tree level. It is set up so that tasks that are divisible by *(2 * step)* are the receiving processes and otherwise are the sending processes, which send their data to these receivers to merge. Next there is a check to make sure that the sender is valid and if it is, it first gets the size of the array that it is receiving from the sender, makes a new list of the correct size to be populated by that sender, and then populates it. After this, it creates a new array to be populated with both lists and then calls the merge function to sort them and then updates the size and data of the local array. If the process was a sender, then it finds where it needs to send the data to and then sends its size and data to that target process, breaking after because it no longer needs to send more, as some of the previous receivers will be turned into senders in the next loop. Lastly, it doubles the step, as the distance between processes has now doubled. Finally, The master process does a correctness check on the entire array, as they have all been sorted into this process. 
 - Radix Sort: This parallel radix sort algorithm leverages MPI to distribute the sorting workload across multiple processors, enabling efficient handling of large datasets. It takes two input arguments: the input size (e.g., 2^16, 2^18, etc.) and the input type (Sorted, ReverseSorted, Random, or 1% Perturbed). The input array is generated by the root process and distributed to all processors using MPI_Scatter. Each processor performs a local radix sort on its segment of the array, using counting sort to sort numbers digit by digit. Once sorted locally, the segments are gathered back to the root process with MPI_Gather. The root process merges the sorted segments into a single array and performs a correctness check by verifying that the final array is in non-decreasing order. If any element is found out of place, the program reports an error; otherwise, it confirms that the sorting was successful.
 
 ### 2b. Pseudocode for each parallel algorithm
@@ -166,43 +166,62 @@ MPI_Finalize
 // define my master and worker
 // main function
 main:
-// store the size of the array
-sizeOfArray = input from user
+CALI_CXX_MARK_FUNCTION
+Set up variables for type of array and size of array
+Read in the type and size
 
-// create various variables for number of tasks, workers, source, dest, etc. (and buffers)
-numtasks, numworkers, source, dest, timing variables
+Set up variables for number of tasks, tasks id, and rc
 
-//make the unsorted array of desired size
-for loop to make the overall array
+Set up caliper regions
 
-// Initialize MPI
-MPI_Init
-MPI_Comm_rank
-MPI_Comm_size
+MPI_INIT()
+MPI_Comm_rank()
+MPI_Comm_size()
 
-// how many elements each process is working with
-amount = elements / processes
+calculate localarray size
+set up localarray
 
-// evenly split the arrays along available processes with MPI_Scatter
-MPI_Scatter
+start caliper
 
-// make each process do mergesort locally
-localMergeSort
+//error handle
+if numtasks < 2
+	MPI_Abort()
 
-//get all the information from the number of processes into overall list
-MPI_Gather
+calculate offset for generating numbers in local array
+choose_array_type() - choose the data we want to include in the local array
 
-//if the master program, then we will merge all the elements into overall, final array
-if master:
-	localMergeSort
+mergeSort() - call mergesort on each local array
 
-//make sure everything is synced
-MPI_Barrier
+set step variable
+while step < numtasks:
+	if taskid % (2 * step) == 0: //receiving process
+		if taskid + step < numtasks:
+			get size of sending array
+			MPI_Recv()
+			get the data from the sending array
+			MPI_Recv()
+			create a new array of the size of both current receiving and the sending array
+			copy their data into the new array
+			merge()
+			update localarray to be newarray
+	else: //sending process
+		calculate the target process (process we are sending the info to)
+		Send the size of the array
+		MPI_Send()
+		send the data of the array
+		MPI_Send()
+		break
+	step *= 2
 
-// Finalize MPI
-MPI_Finalize
+if task == Master:
+	isCorrect = False by default
+	correctness_checker()
+	print out if the algorithm produced the correct output
 
-// Local merge sort function is the sequential version
+stop the caliper
+put all of the metadata from adiak
+delete localArrays
+MPI_Finalize()
 ```
 **Radix Sort**
 ```

@@ -101,17 +101,17 @@ vector<int> merge_sorted(vector<int> arr, int num_procs, int local_size) {
     return sorted;
 }
 
-void correctness_check(vector<int> arr) {
+bool correctness_check(vector<int> arr) {
     CALI_CXX_MARK_FUNCTION;
     
     for (int i = 1; i < arr.size(); ++i) {
-            if (arr[i] < arr[i-1]) {
-                cout << "Incorrect" << endl;
-                return;
-            }
-            //cout << arr[i] << " ";
+        if (arr[i] < arr[i-1]) {
+            return false;
         }
-    cout << "Correct" << endl;
+        //cout << arr[i] << " ";
+    }
+    
+    return true;
 }
 
 int main(int argc, char* argv[]) {
@@ -143,29 +143,60 @@ int main(int argc, char* argv[]) {
     int local_size = input_size / num_procs;
     vector<int> local = data_init_runtime(rank, num_procs, input_size, input_type, local_size);
 
-    // Radix sort
     CALI_MARK_BEGIN("comp");
     CALI_MARK_BEGIN("comp_large");
     radix_sort(local);
     CALI_MARK_END("comp_large");
     CALI_MARK_END("comp");
 
-    vector<int> global(input_size);
+    int step = 1;
+    while (step < num_procs) {
+        if (rank % (2 * step) == 0) {
+            int partner = rank + step;
+            if (partner < num_procs) {
+                int recv_size;
+                CALI_MARK_BEGIN("comm");
+                CALI_MARK_BEGIN("comm_small");
+                MPI_Recv(&recv_size, 1, MPI_INT, partner, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                CALI_MARK_END("comm_small");
+                CALI_MARK_END("comm");
 
-    CALI_MARK_BEGIN("comm");
-    CALI_MARK_BEGIN("comm_large");
-    MPI_Gather(local.data(), local_size, MPI_INT, global.data(), local_size, MPI_INT, 0, MPI_COMM_WORLD);
-    CALI_MARK_END("comm_large");
-    CALI_MARK_END("comm");
+                vector<int> recv(recv_size);
+                CALI_MARK_BEGIN("comm");
+                CALI_MARK_BEGIN("comm_large");
+                MPI_Recv(recv.data(), recv_size, MPI_INT, partner, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                CALI_MARK_END("comm_large");
+                CALI_MARK_END("comm");
+
+                CALI_MARK_BEGIN("comp");
+                CALI_MARK_BEGIN("comp_large");
+                vector<int> merged(local.size() + recv_size);
+                merge(local.begin(), local.end(), recv.begin(), recv.end(), merged.begin());
+                local = move(merged);
+                CALI_MARK_END("comp_large");
+                CALI_MARK_END("comp");
+            }
+        } else {
+            int target = rank - step;
+
+            CALI_MARK_BEGIN("comm");
+            CALI_MARK_BEGIN("comm_small");
+            MPI_Send(&local_size, 1, MPI_INT, target, 0, MPI_COMM_WORLD);
+            CALI_MARK_END("comm_small");
+            
+            CALI_MARK_BEGIN("comm_large");
+            MPI_Send(local.data(), local_size, MPI_INT, target, 0, MPI_COMM_WORLD);
+            CALI_MARK_END("comm_large");
+            CALI_MARK_END("comm");
+
+            break;
+        }
+        step *= 2;
+    }
 
     if (rank == 0) {
-        CALI_MARK_BEGIN("comp");
-        CALI_MARK_BEGIN("comp_large");
-        vector<int> sorted = merge_sorted(global, num_procs, local_size);
-        CALI_MARK_END("comp_large");
-        CALI_MARK_END("comp");
-        
-        correctness_check(sorted);
+        bool correct = correctness_check(local);
+        printf("%s\n", (correct ? "Correct" : "Incorrect"));
     }
 
     adiak::init(NULL);

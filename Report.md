@@ -772,6 +772,8 @@ Analyze these plots and choose a subset to present and explain in your presentat
 ![Main Sorted Speedup 65536](./combined_graphs/Sorted/speedup/main_speedup_Sorted_65536.png)
 ![Main Sorted Speedup 268435456](./combined_graphs/Sorted/speedup/main_speedup_Sorted_268435456.png)
 
+As you can see, the communication graphs seem quite random but seme to spike when we add more processes. This can make sense since we're communicating on more nodes, thus allowing for more variance (also because Grace noise). Regarding large computations, it seems like for both small and large array sizes, it follows the same trend for all algorithms. It follows an exponential decay pattern in the order of magnitude of sample sort, radix sort, bitonic sort, and merge sort. For the main graphs, it seems mostly the same order with sample sort notably having a higher magnitude than the rest of the algorithms. You can actually see, however, for main graphs, that with a smaller array size our total time increases as we add more processes due to overhead and MPI. As for the comm speedup, it seems like a mostly random graph yet again except for larger array sizes, the total speedup increases by a large magnitude as we add more processes. For the speedup of large computations, it seems to follow the trend of an exponential increase for all implementations with the highest increase going to merge sort, followed by radix sort, followed by sample sort, followed by bitonic sort for small and large array sizes. For main speedup, for large array sizes, it seems like sample sort has the largest speedup followed by radix/bitonic and finally merge sort.
+
 
 ## 6. Final Report
 Submit a zip named `TeamX.zip` where `X` is your team number. The zip should contain the following files:

@@ -711,6 +711,62 @@ Plots for the presentation should be as follows:
         - Weak scaling plots for each input_type (4 plots)
 
 Analyze these plots and choose a subset to present and explain in your presentation.
+**Perturbed Graphs**
+![Comm Perc Perturbed 65536](./combined_graphs/1_perc_perturbed/comm/comm_1_perc_perturbed_65536.png)
+![Comm Perc Perturbed 268435456](./combined_graphs/1_perc_perturbed/comm/comm_1_perc_perturbed_268435456.png)
+![Comp Large Perc Perturbed 65536](./combined_graphs/1_perc_perturbed/comp_large/comp_large_1_perc_perturbed_65536.png)
+![Comp Large Perc Perturbed 268435456](./combined_graphs/1_perc_perturbed/comp_large/comp_large_1_perc_perturbed_268435456.png)
+![MainPerc Perturbed 65536](./combined_graphs/1_perc_perturbed/main/main_1_perc_perturbed_65536.png)
+![MainPerc Perturbed 268435456](./combined_graphs/1_perc_perturbed/main/main_1_perc_perturbed_268435456.png)
+![Comm Perc Perturbed Speedup 65536](./combined_graphs/1_perc_perturbed/speedup/comm_speedup_1_perc_perturbed_65536.png)
+![Comm Perc Perturbed Speedup 268435456](./combined_graphs/1_perc_perturbed/speedup/comm_speedup_1_perc_perturbed_268435456.png)
+![Comp Large Perc Perturbed Speedup 65536](./combined_graphs/1_perc_perturbed/speedup/comp_large_speedup_1_perc_perturbed_65536.png)
+![Comp Large Perc Perturbed Speedup 268435456](./combined_graphs/1_perc_perturbed/speedup/comp_large_speedup_1_perc_perturbed_268435456.png)
+![Main Perc Perturbed Speedup 65536](./combined_graphs/1_perc_perturbed/speedup/main_speedup_1_perc_perturbed_65536.png)
+![Main Perc Perturbed Speedup 268435456](./combined_graphs/1_perc_perturbed/speedup/main_speedup_1_perc_perturbed_268435456.png)
+
+**Random Graphs**
+![Comm Random 65536](./combined_graphs/Random/comm/comm_Random_65536.png)
+![Comm Random 268435456](./combined_graphs/Random/comm/comm_Random_268435456.png)
+![Comp Large Random 65536](./combined_graphs/Random/comp_large/comp_large_Random_65536.png)
+![Comp Large Random 268435456](./combined_graphs/Random/comp_large/comp_large_Random_268435456.png)
+![Main Random 65536](./combined_graphs/Random/main/main_Random_65536.png)
+![Main Random 268435456](./combined_graphs/Random/main/main_Random_268435456.png)
+![Comm Random Speedup 65536](./combined_graphs/Random/speedup/comm_speedup_Random_65536.png)
+![Comm Random Speedup 268435456](./combined_graphs/Random/speedup/comm_speedup_Random_268435456.png)
+![Comp Large Random Speedup 65536](./combined_graphs/Random/speedup/comp_large_speedup_Random_65536.png)
+![Comp Large Random Speedup 268435456](./combined_graphs/Random/speedup/comp_large_speedup_Random_268435456.png)
+![Main Random Speedup 65536](./combined_graphs/Random/speedup/main_speedup_Random_65536.png)
+![Main Random Speedup 268435456](./combined_graphs/Random/speedup/main_speedup_Random_268435456.png)
+
+**Reverse Sorted Graphs**
+![Comm ReverseSorted 65536](./combined_graphs/ReverseSorted/comm/comm_ReverseSorted_65536.png)
+![Comm ReverseSorted 268435456](./combined_graphs/ReverseSorted/comm/comm_ReverseSorted_268435456.png)
+![Comp Large ReverseSorted 65536](./combined_graphs/ReverseSorted/comp_large/comp_large_ReverseSorted_65536.png)
+![Comp Large ReverseSorted 268435456](./combined_graphs/ReverseSorted/comp_large/comp_large_ReverseSorted_268435456.png)
+![Main ReverseSorted 65536](./combined_graphs/ReverseSorted/main/main_ReverseSorted_65536.png)
+![Main ReverseSorted 268435456](./combined_graphs/ReverseSorted/main/main_ReverseSorted_268435456.png)
+![Comm ReverseSorted Speedup 65536](./combined_graphs/ReverseSorted/speedup/comm_speedup_ReverseSorted_65536.png)
+![Comm ReverseSorted Speedup 268435456](./combined_graphs/ReverseSorted/speedup/comm_speedup_ReverseSorted_268435456.png)
+![Comp Large ReverseSorted Speedup 65536](./combined_graphs/ReverseSorted/speedup/comp_large_speedup_ReverseSorted_65536.png)
+![Comp Large ReverseSorted Speedup 268435456](./combined_graphs/ReverseSorted/speedup/comp_large_speedup_ReverseSorted_268435456.png)
+![Main ReverseSorted Speedup 65536](./combined_graphs/ReverseSorted/speedup/main_speedup_ReverseSorted_65536.png)
+![Main ReverseSorted Speedup 268435456](./combined_graphs/ReverseSorted/speedup/main_speedup_ReverseSorted_268435456.png)
+
+**Sorted Graphs**
+![Comm Sorted 65536](./combined_graphs/Sorted/comm/comm_Sorted_65536.png)
+![Comm Sorted 268435456](./combined_graphs/Sorted/comm/comm_Sorted_268435456.png)
+![Comp Large Sorted 65536](./combined_graphs/Sorted/comp_large/comp_large_Sorted_65536.png)
+![Comp Large Sorted 268435456](./combined_graphs/Sorted/comp_large/comp_large_Sorted_268435456.png)
+![Main Sorted 65536](./combined_graphs/Sorted/main/main_Sorted_65536.png)
+![Main Sorted 268435456](./combined_graphs/Sorted/main/main_Sorted_268435456.png)
+![Comm Sorted Speedup 65536](./combined_graphs/Sorted/speedup/comm_speedup_Sorted_65536.png)
+![Comm Sorted Speedup 268435456](./combined_graphs/Sorted/speedup/comm_speedup_Sorted_268435456.png)
+![Comp Large Sorted Speedup 65536](./combined_graphs/Sorted/speedup/comp_large_speedup_Sorted_65536.png)
+![Comp Large Sorted Speedup 268435456](./combined_graphs/Sorted/speedup/comp_large_speedup_Sorted_268435456.png)
+![Main Sorted Speedup 65536](./combined_graphs/Sorted/speedup/main_speedup_Sorted_65536.png)
+![Main Sorted Speedup 268435456](./combined_graphs/Sorted/speedup/main_speedup_Sorted_268435456.png)
+
 
 ## 6. Final Report
 Submit a zip named `TeamX.zip` where `X` is your team number. The zip should contain the following files:

@@ -656,7 +656,21 @@ This makes sense as you have to rely more on computing on the large scale than t
 ![Main Times 4194304](./radixsort/main_graphs/main_input_size_4194304.png)
 ![Main Times 16777216](./radixsort/main_graphs/main_input_size_16777216.png)
 ![Main Times 67108864](./radixsort/main_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
+![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png)
+![Main Variance Random 65536](./radixsort/part4_graphs/Random/main_Variance_Random_65536.png)
+![Main Variance Random 268435456](./radixsort/part4_graphs/Random/main_Variance_Random_268435456.png)
+
+**Radix Sort Comm Graphs**
+![Comm Random Input Size 65536](./radixsort/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Random Input Size 268435456](./radixsort/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Variance Random 65536](./radixsort/part4_graphs/Random/comm_Variance_Random_65536.png)
+![Comm Variance Random 268435456](./radixsort/part4_graphs/Random/comm_Variance_Random_268435456.png)
+
+**Radix Sort Comp Large Graphs**
+![Comp Large Random Input Size 65536](./radixsort/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Random Input Size 268435456](./radixsort/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Variance Random 65536](./radixsort/part4_graphs/Random/comp_large_Variance_Random_65536.png)
+![Comp Large Variance Random 268435456](./radixsort/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 
 **Analysis**
 

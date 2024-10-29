@@ -35,64 +35,65 @@ Our team will be using Discord to communicate with each other.
 MPI_Init()
 
 // Get number of processes and current process rank
-num_processes = MPI_Comm_size(MPI_COMM_WORLD)
+num_procs = MPI_Comm_size(MPI_COMM_WORLD)
 rank = MPI_Comm_rank(MPI_COMM_WORLD)
 
-// Get input array and ensure all processes have the size of the input array
-If rank == 0:
-	Read input array as input_array
-	n = size of input_array
+// Determine total size of input and input type
+totalSize = Command-line input
+input_type = Command-line input
 
-// Broadcast n to non-master processes
-MPI_Bcast
+// Calculate localSize and initialize localArray based on input_type
+localSize = totalSize / num_procs
+if input_type == "Random":
+    localArray = random(localSize, totalSize, rank)
+else if input_type == "Sorted":
+    localArray = sorted(localSize, totalSize, rank)
+else if input_type == "ReverseSorted":
+    localArray = reversed(localSize, totalSize, rank)
+else if input_type == "1_perc_perturbed":
+    localArray = perturbed(localSize, totalSize, rank)
 
-// Create a new local array based on the number of processors
-localSize = num_processors / n
+// Sort localArray in ascending order
+sort(localArray)
 
-// Evenly distribute chunks of A to each process using MPI_Scatter and localSize
-MPI_Scatter
+// Calculate number of stages for bitonic sort
+num_stages = log2(num_procs)
 
-localArray = array of size localSize holding the contents after MPI_Scatter
+// Perform bitonic sort stages
+for stage from 1 to num_stages:
+    for step from stage down to 1:
+        partner_rank = rank XOR (1 << (step - 1))
+        
+        // Determine group size, group number, and sorting direction (ascending/descending)
+        group_size = 1 << stage
+        group = rank / group_size
+        ascending = (group % 2 == 0)
 
-sort localArray in ascending order if rank / localSize is even otherwise sort descending
+        // Exchange data with partner
+        partner_arr = array of size localSize
+        MPI_Sendrecv(localArray, partner_rank, partner_arr, partner_rank)
 
-num_stages = log_2(P)
+        // Merge localArray and partner_arr
+        merged = merge localArray and partner_arr maintaining sorted order
 
-for each stage from 1 to num_stages:
-	for each step from stage to 0:
-		// Getting partner rank to determine what process to compare and exchange with
-		partner = rank ^ step
-		ascending = true if rank / localSize is even
- 
-        	if (rank < partner) and ascending:
-			// Use MPI_SendRecv to exchange array data with partner
-			MPI_SendRecv
+        // Copy merged array back to localArray based on direction of the sort
+        if rank < partner_rank and ascending or rank > partner_rank and not ascending:
+            localArray = first half of merged
+        else:
+            localArray = second half of merged
 
-			Compare and exchange with partner to ensure ascending order
+    // Synchronize all processes after each step
+    MPI_Barrier(MPI_COMM_WORLD)
 
-        	else if (rank > partner) and not ascending:
-			// Use MPI_SendRecv to exchange array data with partner
-			MPI_SendRecv
-
-			Compare and exchange with partner to ensure descending order
-
-    	// Synchronize all processes after each step
-    	MPI_Barrier()
-
-// Gather the fully sorted chunks at the root process
+// Check if data is globally sorted
 if rank == 0:
-	// Gather sorted chunks from all processes into A
-	MPI_Gather
+    if is_globally_sorted(localArray):
+        print "The data is globally sorted."
+    else:
+        print "The data is NOT globally sorted."
 
-	// Print out A
-	for element in A:
-		print(element)
-else:
-	// Gather local sorted array
-	MPI_Gather
-
-// Finalize MPI
-MPI_Finalize
+// Gather metadata and finalize MPI
+MPI_Finalize()
 ```
 
 **Sample Sort**

@@ -636,11 +636,27 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
 
 **Merge Sort Graphs**
-![Main_times_1048576_Random](./mergesort/Graphs/main_input_size_1048576_Random.png)
-![Main_times_1048576_Sorted](./mergesort/Graphs/main_input_size_1048576_Sorted.png)
-![Main Times 67108864_Sorted](./mergesort/Graphs/main_input_size_67108864_Sorted.png)
-![Main_times_67108864_Random](./mergesort/Graphs/main_input_size_67108864_Random.png)
+![Main Times 65536](./mergesort/Graphs/part4_graphs/main_input_size_65536.png)
+![Main Times 262144](./mergesort/Graphs/part4_graphs/main_input_size_262144.png)
+![Main Times 1048576](./mergesort/Graphs/part4_graphs/main_input_size_1048576.png)
+![Main Times 4194304](./mergesort/Graphs/part4_graphs/main_input_size_4194304.png)
+![Main Times 16777216](./mergesort/Graphs/part4_graphs/main_input_size_16777216.png)
+![Main Times 67108864](./mergesort/Graphs/part4_graphs/main_input_size_67108864.png)
+![Main Times 268435456](./mergesort/Graphs/part4_graphs/main_input_size_268435456.png)
+![Main Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/main_Variance_Random_65536.png)
+![Main Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/main_Variance_Random_268435456.png)
 
+**Bitonic Sort Comm Graphs**
+![Comm Random Input Size 65536](./mergesort/Graphs/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Random Input Size 268435456](./mergesort/Graphs/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/comm_Variance_Random_65536.png)
+![Comm Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/comm_Variance_Random_268435456.png)
+
+**Bitonic Sort Comp Large Graphs**
+![Comp Large Random Input Size 65536](./mergesort/Graphs/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Random Input Size 268435456](./mergesort/Graphs/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/comp_large_Variance_Random_65536.png)
+![Comp Large Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 **Analysis**
 
 For my algorithm, unfortunately, as you increase the number of processes on the same problem size, the average time per node increases. I think that this could be due to the way that I collect the results from

@@ -650,34 +650,30 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
 
 **Merge Sort Graphs**
-![Main Times 65536](./mergesort/Graphs/part4_graphs/main_input_size_65536.png)
-![Main Times 262144](./mergesort/Graphs/part4_graphs/main_input_size_262144.png)
-![Main Times 1048576](./mergesort/Graphs/part4_graphs/main_input_size_1048576.png)
-![Main Times 4194304](./mergesort/Graphs/part4_graphs/main_input_size_4194304.png)
-![Main Times 16777216](./mergesort/Graphs/part4_graphs/main_input_size_16777216.png)
-![Main Times 67108864](./mergesort/Graphs/part4_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./mergesort/Graphs/part4_graphs/main_input_size_268435456.png)
+![Main Times 65536](./mergesort/Graphs/part5_graphs/strong_scaling/main_65536.png)
+![Main Times 262144](./mergesort/Graphs/part5_graphs/strong_scaling/main_262144.png)
+![Main Times 1048576](./mergesort/Graphs/part5_graphs/strong_scaling/main_1048576.png)
+![Main Times 4194304](./mergesort/Graphs/part5_graphs/strong_scaling/main_4194304.png)
+![Main Times 16777216](./mergesort/Graphs/part5_graphs/strong_scaling/main_16777216.png)
+![Main Times 67108864](./mergesort/Graphs/part5_graphs/strong_scaling/main_67108864.png)
+![Main Times 268435456](./mergesort/Graphs/part5_graphs/strong_scaling/main_268435456.png)
 ![Main Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/main_Variance_Random_65536.png)
 ![Main Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/main_Variance_Random_268435456.png)
 
-**Bitonic Sort Comm Graphs**
+**Merge Sort Comm Graphs**
 ![Comm Random Input Size 65536](./mergesort/Graphs/part4_graphs/Random/comm_Random_inputsize_65536.png)
 ![Comm Random Input Size 268435456](./mergesort/Graphs/part4_graphs/Random/comm_Random_inputsize_268435456.png)
 ![Comm Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/comm_Variance_Random_65536.png)
 ![Comm Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/comm_Variance_Random_268435456.png)
 
-**Bitonic Sort Comp Large Graphs**
+**Merge Sort Comp Large Graphs**
 ![Comp Large Random Input Size 65536](./mergesort/Graphs/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
 ![Comp Large Random Input Size 268435456](./mergesort/Graphs/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
 ![Comp Large Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/comp_large_Variance_Random_65536.png)
 ![Comp Large Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 **Analysis**
 
-For my algorithm, unfortunately, as you increase the number of processes on the same problem size, the average time per node increases. I think that this could be due to the way that I collect the results from
-each thread. I use gather, which causes all of the threads to get their result before trying to sort the global array. Due to the increase in the number of threads, this causes an increase in the waiting time
-for each of them. I was also unable to generate all of the caliper files for this part as of now due to the Grace cluster not allowing for me to run my jobs I queued. I had them queued for ~12 hours and they never ran.
-I will continue to run them after this to make sure that I have the results I need. If you look at the computation large in my Graphs file under merge sort, you can see that it increases with the number of processes.
-This makes sense as you have to rely more on computing on the large scale than the small scale. (https://github.com/JackVacek/Project_2024/tree/main/mergesort/Graphs). As you increase the overall thread, the master thread has to compute the final results from all of the threads.
+Not Done
 
 **Radix Sort Main Graphs**
 ![Main Times 65536](./radixsort/main_graphs/main_input_size_65536.png)

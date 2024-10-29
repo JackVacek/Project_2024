@@ -725,6 +725,7 @@ Analyze these plots and choose a subset to present and explain in your presentat
 ![Main Perc Perturbed Speedup 268435456](./combined_graphs/1_perc_perturbed/speedup/main_speedup_1_perc_perturbed_268435456.png)
 
 **Random Graphs**
+
 ![Comm Random 65536](./combined_graphs/Random/comm/comm_Random_65536.png)
 ![Comm Random 268435456](./combined_graphs/Random/comm/comm_Random_268435456.png)
 ![Comp Large Random 65536](./combined_graphs/Random/comp_large/comp_large_Random_65536.png)
@@ -739,6 +740,7 @@ Analyze these plots and choose a subset to present and explain in your presentat
 ![Main Random Speedup 268435456](./combined_graphs/Random/speedup/main_speedup_Random_268435456.png)
 
 **Reverse Sorted Graphs**
+
 ![Comm ReverseSorted 65536](./combined_graphs/ReverseSorted/comm/comm_ReverseSorted_65536.png)
 ![Comm ReverseSorted 268435456](./combined_graphs/ReverseSorted/comm/comm_ReverseSorted_268435456.png)
 ![Comp Large ReverseSorted 65536](./combined_graphs/ReverseSorted/comp_large/comp_large_ReverseSorted_65536.png)
@@ -753,6 +755,7 @@ Analyze these plots and choose a subset to present and explain in your presentat
 ![Main ReverseSorted Speedup 268435456](./combined_graphs/ReverseSorted/speedup/main_speedup_ReverseSorted_268435456.png)
 
 **Sorted Graphs**
+
 ![Comm Sorted 65536](./combined_graphs/Sorted/comm/comm_Sorted_65536.png)
 ![Comm Sorted 268435456](./combined_graphs/Sorted/comm/comm_Sorted_268435456.png)
 ![Comp Large Sorted 65536](./combined_graphs/Sorted/comp_large/comp_large_Sorted_65536.png)
@@ -779,6 +782,7 @@ For random, the communication graphs show similar trends across all algorithms f
 For reverse sorted graphs, we continue to see the trend of increasing communication times as the number of processors increase for the smallest input size. This is because of the communication overhead where more processes means more communication time because there is very little data being transferred. As for the largest input size, there is no communication overhead so there is generally a consistent communication time with it overall decreasing as the data is being split well for each sort type. For comp_large, we find that all sort types have less computation time as the number of processes increases. This is because there are more processors to split the work between. As for main, it is a combination of both computation times and communication times, but we can see that for all sorts, it is clearly seen which one takes precedence. In the smallest input size, communication time is the main factor, but as the input size increases, computation time becomes the main factor. For the speedup graphs, we can see that speedup decreases for the smallest input size and increases for the largest input size. This is because the smallest input size has more communication overhead, but the largest input size has more computation overhead. This is consistent with the trends we see in the main graphs. 
 
 **Sorted analysis**
+
 As you can see, the communication graphs seem quite random but seme to spike when we add more processes. This can make sense since we're communicating on more nodes, thus allowing for more variance (also because Grace noise). Regarding large computations, it seems like for both small and large array sizes, it follows the same trend for all algorithms. It follows an exponential decay pattern in the order of magnitude of sample sort, radix sort, bitonic sort, and merge sort. For the main graphs, it seems mostly the same order with sample sort notably having a higher magnitude than the rest of the algorithms. You can actually see, however, for main graphs, that with a smaller array size our total time increases as we add more processes due to overhead and MPI. As for the comm speedup, it seems like a mostly random graph yet again except for larger array sizes, the total speedup increases by a large magnitude as we add more processes. For the speedup of large computations, it seems to follow the trend of an exponential increase for all implementations with the highest increase going to merge sort, followed by radix sort, followed by sample sort, followed by bitonic sort for small and large array sizes. For main speedup, for large array sizes, it seems like sample sort has the largest speedup followed by radix/bitonic and finally merge sort.
 
 

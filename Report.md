@@ -619,7 +619,9 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 **Analysis**
 - In these graphs for bitonic sort that showcase the main function's runtime as a function of # of processes vs. time for each input type, we can see that for smaller inputs, there's an overall increasing trend up until around 2^24 array size. This can be explained due to the fact that there's overhead with MPI initializations, data generation, correctness check, etc. For these input sizes, it outweighs the computation speedup of the algorithm when we add more processes since the total time is so small already. As for the different input types, it seems to go in the order of increasing to decreasing for: perturbed, random, sorted, reversed. This pattern decreases and it's less visible as we add more processes. This can be due to the fact that our random generator library has more overhead (and perturbed essentially sorts it and then perturbs it causing it to be larger). Additionally, when we start using multiple nodes, there can be overhead associated with MPI communication between nodes as well (which is typically larger). However, as we add more processes, and the time seems to decrease in a seemingly exponential decay pattern. This makes sense since the main array can be split up into more processes and the sorting takes less time by that factor. This pattern seems to be approximately the same across max, min, and avg time per rank.
 - For Total time (for the main function), the trends mostly linearly increase since there are more processes, and even though each process does less total work, there is still overhead that each individual process must do.
-- For Variance time/rank, it seems to follow somewhat of a random pattern floating around 0.0, with the exception of the variance for the main function which spikes to a bit of a larger value around 0.006. As for the variance for the comm and comp_large regions, it follows this as well except with seemingly random spikes at different numbers of processes. 
+- Regarding communication, it seems like there's a lot of random noise. However, this is likely because there a lot of people using the HPRC Grace cluster, which could be causing network latency and communication latency.
+- For computation time, it seems like for both the smallest and largest array sizes, the time decreases at an exponential rate as we add more processes.
+- For Variance time/rank in main max size, you can see that it hovers around 0 until about 1024 where the variance spikes to 0.005. There are larger spikes in the smaller 2^16 input size, which can be logically explained simply because noise is amplified when the computation time is so small for this array size. However, this can be negligible since this is a value around 0. When we look at comm, it seems like the variance for the larger input size has a higher value, which can make sense since I'm sending and receiving more data per rank. The same explanation for variations can be made for comp_large.
 
 **Sample Sort Main Graphs**
 ![Main Times 65536](./samplesort/main_graphs/main_input_size_65536.png)
@@ -699,7 +701,7 @@ For my graphs, you can see that as you increase the processors on the smaller ar
 
 **Analysis**
 
-After parallelizing the merging of local arrays, this implementation of radix sort now better reflects the benefits of increasing process count for larger input sizes. With lower input sizes, the runtime of main unfortunately increases with more processes as the increased communication time between so many processes outweighs the benefit from parallelism. As the input size grows, we see that parallelism helps decrease runtime significantly, albeit with diminishing returns. Massive spikes in communication time can be seen at 512 processes on the two largest input sizes - this can be attributed to inconsistency between nodes used, since this spike is not consistent between input types and is seen to a lower degree on lower input sizes as well. All computation graphs show the same type of curve, reflecting the benefit of parallelism in those areas. 
+After parallelizing the merging of local arrays, this implementation of radix sort now better reflects the benefits of increasing process count for larger input sizes. With lower input sizes, the runtime of main unfortunately increases with more processes as the increased communication time between so many processes outweighs the benefit from parallelism. As the input size grows, we see that parallelism helps decrease runtime significantly, albeit with diminishing returns. Massive spikes in communication time can be seen at 512 processes on the two largest input sizes - this can be attributed to inconsistency between nodes used, since this spike is not consistent between input types and is seen to a lower degree on lower input sizes as well. All computation graphs show the same type of downwards curve, reflecting the benefit of parallelism in those areas and the decreased gain in performance as more and more processes are used. In general, the communication graphs show higher variance on the lower input sizes due to the runtime being so low that any fluctuation can dramatically affect the graph. We still see the spike on the highest input size correlating to the spike in the main runtime. 
 
 ## 5. Presentation
 Plots for the presentation should be as follows:
@@ -710,7 +712,9 @@ Plots for the presentation should be as follows:
         - Weak scaling plots for each input_type (4 plots)
 
 Analyze these plots and choose a subset to present and explain in your presentation.
+
 **Perturbed Graphs**
+
 ![Comm Perc Perturbed 65536](./combined_graphs/1_perc_perturbed/comm/comm_1_perc_perturbed_65536.png)
 ![Comm Perc Perturbed 268435456](./combined_graphs/1_perc_perturbed/comm/comm_1_perc_perturbed_268435456.png)
 ![Comp Large Perc Perturbed 65536](./combined_graphs/1_perc_perturbed/comp_large/comp_large_1_perc_perturbed_65536.png)

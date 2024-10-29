@@ -5,7 +5,7 @@
 #
 ##NECESSARY JOB SPECIFICATIONS
 #SBATCH --job-name=32-4194304       #Set the job name to "JobName"
-#SBATCH --time=00:30:00           #Set the wall clock limit
+#SBATCH --time=00:05:00           #Set the wall clock limit
 #SBATCH --nodes=1               #Request nodes
 #SBATCH --ntasks-per-node=32    # Request tasks/cores per node
 #SBATCH --mem=300G                 #Request GB per node 
@@ -25,6 +25,6 @@ module load intel/2020b       # load Intel software stack
 module load CMake/3.12.1
 module load GCCcore/8.3.0
 
-CALI_CONFIG="spot(output=p${processes}-a${array_size}-${input_type}.cali, \
+CALI_CONFIG="spot(output=p${processes}-a${array_size}-${input_type}-bitonic.cali, \
     time.variance,profile.mpi)" \
 mpirun -np $processes ./bitonicsort $array_size $input_type

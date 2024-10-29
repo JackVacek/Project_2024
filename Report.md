@@ -600,7 +600,21 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 ![Main Times 4194304](./bitonicsort/main_graphs/main_input_size_4194304.png)
 ![Main Times 16777216](./bitonicsort/main_graphs/main_input_size_16777216.png)
 ![Main Times 67108864](./bitonicsort/main_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./bitonicsort/main_graphs/main_input_size_268435456.png) 
+![Main Times 268435456](./bitonicsort/main_graphs/main_input_size_268435456.png)
+![Main Variance Random 268435456](./bitonicsort/part4_graphs/part4_graphs/Random/main_Variance_Random_268435456.png)
+![Main Variance Random 65536](./bitonicsort/part4_graphs/part4_graphs/Random/main_Variance_Random_65536.png)
+
+**Bitonic Sort Comm Graphs**
+![Comm Random Input Size 268435456](./bitonicsort/part4_graphs/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Random Input Size 65536](./bitonicsort/part4_graphs/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Variance Random 268435456](./bitonicsort/part4_graphs/part4_graphs/Random/comm_Variance_Random_268435456.png)
+![Comm Variance Random 65536](./bitonicsort/part4_graphs/part4_graphs/Random/comm_Variance_Random_65536.png)
+
+**Bitonic Sort Comp Large Graphs**
+![Comp Large Random Input Size 268435456](./bitonicsort/part4_graphs/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Random Input Size 65536](./bitonicsort/part4_graphs/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Variance Random 268435456](./bitonicsort/part4_graphs/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
+![Comp Large Variance Random 65536](./bitonicsort/part4_graphs/part4_graphs/Random/comp_large_Variance_Random_65536.png)
 
 **Analysis**
 - In these graphs for bitonic sort that showcase the main function's runtime as a function of # of processes vs. time for each input type, we can see that for smaller inputs, there's an overall increasing trend up until around 2^24 array size. This can be explained due to the fact that there's overhead with MPI initializations, data generation, correctness check, etc. For these input sizes, it outweighs the computation speedup of the algorithm when we add more processes since the total time is so small already. As for the different input types, it seems to go in the order of increasing to decreasing for: perturbed, random, sorted, reversed. This pattern decreases and it's less visible as we add more processes. This can be due to the fact that our random generator library has more overhead (and perturbed essentially sorts it and then perturbs it causing it to be larger). Additionally, when we start using multiple nodes, there can be overhead associated with MPI communication between nodes as well (which is typically larger). However, as we add more processes, and the time seems to decrease in a seemingly exponential decay pattern. This makes sense since the main array can be split up into more processes and the sorting takes less time by that factor. This pattern seems to be approximately the same across max, min, and avg time per rank.

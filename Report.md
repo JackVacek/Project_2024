@@ -24,7 +24,7 @@ Our team will be using Discord to communicate with each other.
 - Bitonic Sort: In this implentation of Bitionic Sort, MPI is initialized and the number of processes and rank of the current process is obtained. It also accepts two command line arguments: n, the total number of elements we're going to generate & sort, and input_type, which (Random, Sorted, ReverseSorted, or 1% perturbed). Based on this, each process independently creates a local array of size n/num_processes and initializes the array based on the input type. With this, each process has its own local data set, which forms the entire input if put together. Next, each process sorts its own localArray in ascending order to set up the merging procedure in bitonic sort. After that, we go into our nested loop, which goes through a series of log2(num_processes) stages and steps. In each step, the current process and it's partner are paired up to compare and exchange with each other using the XOR operator, which lets each process pair with a different partner in each step. After that, each process sends over its local array with its partner and vice versa. The two sorted arrays are merged together in a way that the sorted property remains and, depending on the direction of the sort, the current process's rank and its partner's rank, either the lower half or the upper half of the merged array is kept. After each stage, there is a barrier that waits for all processes to finish before proceeding to the next one. Finally, in the correctness check, each process checks to see if its local array is sorted and that the next rank is larger than the current one. 
 - Sample Sort: In this implementation of Sample Sort, each process independently generates its own portion of the input data based on the specified type (random, sorted, reverse sorted, or 1% perturbed). Each processor has its own local data set where collectively, the entire input is formed. Since the data is already split between processors, the first step of Sample Sort is complete after generation. Next, each processor sorts its local data. After sorting, samples are chosen for each processor's local data. Oversampling is utilized in this algorithm for better scaling and to provide samples that better represent the data itself. Each processor selects *k * num_procs* evenly spaced samples from its sorted local data, where *k* is the oversampling factor and *num_procs* is the number of processors. The local samples are then gathered from all processors into a global sample array. The global sample array is then sorted, and *num_procs - 1* pivots are selected at evenly spaced intervals to divide the data range into num_procs buckets. After selecting the pivots from the samples, each processor partitions its sorted local data into these buckets based on the pivots. The buckets are then exchanged between the processors to ensure each processor gets the values with their respective bucket. Each processor now has the data that falls within its assigned range based off of the selected pivots. After the data exchange, each processor performs a final sort on its local dataset and the data as a whole is checked to ensure it is sorted across all processors.
 - Merge Sort: In this implementation of Merge Sort, the user passes in through the command line arguments the number of processes, size of the array, and what type of input data (random, sorted, reverse sorted, or 1% perturbed). After reading these inputs, the choose_array_type method is called in each process to generate the data to be sorted for their subsection of the overall array. This is due to having more data than processes, so each process receives a smaller version of the overall problem to parallelize the computation. Once this data is generated and populated into the array, they will all call a sequential version of merge sort. Each process will individually sort their local array and then merge together in a tree and pair-like fashion. We first have a step variable to keep track of the distance between each task that we are merging and then a loop to make sure that we process each tree level. It is set up so that tasks that are divisible by *(2 * step)* are the receiving processes and otherwise are the sending processes, which send their data to these receivers to merge. Next there is a check to make sure that the sender is valid and if it is, it first gets the size of the array that it is receiving from the sender, makes a new list of the correct size to be populated by that sender, and then populates it. After this, it creates a new array to be populated with both lists and then calls the merge function to sort them and then updates the size and data of the local array. If the process was a sender, then it finds where it needs to send the data to and then sends its size and data to that target process, breaking after because it no longer needs to send more, as some of the previous receivers will be turned into senders in the next loop. Lastly, it doubles the step, as the distance between processes has now doubled. Finally, The master process does a correctness check on the entire array, as they have all been sorted into this process. 
-- Radix Sort: This parallel radix sort algorithm leverages MPI to distribute the sorting workload across multiple processors, enabling efficient handling of large datasets. It takes two input arguments: the input size (e.g., 2^16, 2^18, etc.) and the input type (Sorted, ReverseSorted, Random, or 1% Perturbed). The input array is generated by the root process and distributed to all processors using MPI_Scatter. Each processor performs a local radix sort on its segment of the array, using counting sort to sort numbers digit by digit. Once sorted locally, the segments are gathered back to the root process with MPI_Gather. The root process merges the sorted segments into a single array and performs a correctness check by verifying that the final array is in non-decreasing order. If any element is found out of place, the program reports an error; otherwise, it confirms that the sorting was successful.
+- Radix Sort: In this implementation of Radix Sort, MPI is used to parallelize the sorting process by distributing the input data across multiple processes. The program accepts two command-line arguments: input_size (total number of elements) and input_type (Random, Sorted, ReverseSorted, or 1% perturbed). Each process generates a local array of size input_size/num_procs based on the input type and performs a sequential radix sort on its subset, sorting elements digit by digit using counting sort for each significant digit. After the local sort, processes participate in a step-wise merging phase where pairs of processes exchange and merge their data. In each step, processes with ranks divisible by 2 * step receive data from their partners, merge it with their local array, and update their data, while others send their data and exit further merging. This continues until all data is consolidated in the process with rank 0, which performs a correctness check to ensure the global array is sorted. Performance markers with Caliper and metadata logging via Adiak capture details about the execution, such as the algorithm type, input size, and scalability metrics. Finally, MPI is finalized, and the program terminates.
 
 ### 2b. Pseudocode for each parallel algorithm
 - For MPI programs, include MPI calls you will use to coordinate between processes
@@ -35,64 +35,65 @@ Our team will be using Discord to communicate with each other.
 MPI_Init()
 
 // Get number of processes and current process rank
-num_processes = MPI_Comm_size(MPI_COMM_WORLD)
+num_procs = MPI_Comm_size(MPI_COMM_WORLD)
 rank = MPI_Comm_rank(MPI_COMM_WORLD)
 
-// Get input array and ensure all processes have the size of the input array
-If rank == 0:
-	Read input array as input_array
-	n = size of input_array
+// Determine total size of input and input type
+totalSize = Command-line input
+input_type = Command-line input
 
-// Broadcast n to non-master processes
-MPI_Bcast
+// Calculate localSize and initialize localArray based on input_type
+localSize = totalSize / num_procs
+if input_type == "Random":
+    localArray = random(localSize, totalSize, rank)
+else if input_type == "Sorted":
+    localArray = sorted(localSize, totalSize, rank)
+else if input_type == "ReverseSorted":
+    localArray = reversed(localSize, totalSize, rank)
+else if input_type == "1_perc_perturbed":
+    localArray = perturbed(localSize, totalSize, rank)
 
-// Create a new local array based on the number of processors
-localSize = num_processors / n
+// Sort localArray in ascending order
+sort(localArray)
 
-// Evenly distribute chunks of A to each process using MPI_Scatter and localSize
-MPI_Scatter
+// Calculate number of stages for bitonic sort
+num_stages = log2(num_procs)
 
-localArray = array of size localSize holding the contents after MPI_Scatter
+// Perform bitonic sort stages
+for stage from 1 to num_stages:
+    for step from stage down to 1:
+        partner_rank = rank XOR (1 << (step - 1))
+        
+        // Determine group size, group number, and sorting direction (ascending/descending)
+        group_size = 1 << stage
+        group = rank / group_size
+        ascending = (group % 2 == 0)
 
-sort localArray in ascending order if rank / localSize is even otherwise sort descending
+        // Exchange data with partner
+        partner_arr = array of size localSize
+        MPI_Sendrecv(localArray, partner_rank, partner_arr, partner_rank)
 
-num_stages = log_2(P)
+        // Merge localArray and partner_arr
+        merged = merge localArray and partner_arr maintaining sorted order
 
-for each stage from 1 to num_stages:
-	for each step from stage to 0:
-		// Getting partner rank to determine what process to compare and exchange with
-		partner = rank ^ step
-		ascending = true if rank / localSize is even
- 
-        	if (rank < partner) and ascending:
-			// Use MPI_SendRecv to exchange array data with partner
-			MPI_SendRecv
+        // Copy merged array back to localArray based on direction of the sort
+        if rank < partner_rank and ascending or rank > partner_rank and not ascending:
+            localArray = first half of merged
+        else:
+            localArray = second half of merged
 
-			Compare and exchange with partner to ensure ascending order
+    // Synchronize all processes after each step
+    MPI_Barrier(MPI_COMM_WORLD)
 
-        	else if (rank > partner) and not ascending:
-			// Use MPI_SendRecv to exchange array data with partner
-			MPI_SendRecv
-
-			Compare and exchange with partner to ensure descending order
-
-    	// Synchronize all processes after each step
-    	MPI_Barrier()
-
-// Gather the fully sorted chunks at the root process
+// Check if data is globally sorted
 if rank == 0:
-	// Gather sorted chunks from all processes into A
-	MPI_Gather
+    if is_globally_sorted(localArray):
+        print "The data is globally sorted."
+    else:
+        print "The data is NOT globally sorted."
 
-	// Print out A
-	for element in A:
-		print(element)
-else:
-	// Gather local sorted array
-	MPI_Gather
-
-// Finalize MPI
-MPI_Finalize
+// Gather metadata and finalize MPI
+MPI_Finalize()
 ```
 
 **Sample Sort**
@@ -225,57 +226,67 @@ MPI_Finalize()
 ```
 **Radix Sort**
 ```
-Initialize MPI
-Get total number of processes (P) and current process rank (rank)
+// Initialize MPI
+MPI_Init()
 
+// Get the number of processes and the rank of the current process
+num_procs = MPI_Comm_size(MPI_COMM_WORLD)
+rank = MPI_Comm_rank(MPI_COMM_WORLD)
+
+// Parse input arguments for input size and type
 if rank == 0:
-    Read input array A
-    Broadcast the size of A to all processes
-else:
-    Receive the size of A
+    if missing_arguments():
+        print_usage_and_finalize()
+        return
 
-Distribute chunks of A to each process (scatter)
-Each process now has a local chunk A_local
+input_size = atoi(argv[1])
+input_type = argv[2]
 
-for each digit position (starting from least significant to most significant):
-    
-    // Step 1: Local counting sort by the current digit
-    Initialize local_count array to count occurrences of each digit (0-9)
-    for each element in A_local:
-        Extract the current digit
-        Increment local_count[current_digit]
+// Calculate the size of the local array for each process
+local_size = input_size / num_procs
 
-    // Step 2: Gather the counts from all processes to the root
-    if rank == 0:
-        global_count = Gather local_count from all processes
+// Initialize local data based on input type
+local_array = data_init_runtime(rank, num_procs, input_size, input_type, local_size)
+
+// Perform radix sort on the local array
+radix_sort(local_array)
+
+// Merge sorted arrays from all processes using MPI
+step = 1
+while step < num_procs:
+    if rank % (2 * step) == 0:
+        partner = rank + step
+        if partner < num_procs:
+            // Receive size of partner’s array
+            MPI_Recv(recv_size, 1, MPI_INT, partner, 0)
+
+            // Receive partner’s array data
+            recv_array = allocate(recv_size)
+            MPI_Recv(recv_array, recv_size, MPI_INT, partner, 0)
+
+            // Merge local array with received array
+            merged_array = merge(local_array, recv_array)
+            local_array = merged_array
     else:
-        Send local_count to root process
+        // Determine the target process to send data to
+        target = rank - step
 
-    if rank == 0:
-        // Step 3: Compute global offsets based on global_count
-        Calculate the start index for each process based on global_count
-        Send offsets to all processes
+        // Send the size of the local array
+        MPI_Send(local_size, 1, MPI_INT, target, 0)
 
-    // Step 4: Each process rearranges its local data based on the offsets
-    Receive offsets from root
-    Initialize local_sorted array
-    for each element in A_local:
-        Extract the current digit
-        Place element in the correct position in local_sorted using offsets
+        // Send the local array data
+        MPI_Send(local_array, local_size, MPI_INT, target, 0)
+        
+        break  // Stop further participation in merging
+    step *= 2
 
-    // Synchronize all processes
-    Barrier()
-
-// Step 5: Gather sorted chunks at the root process
+// If rank 0, check correctness of the final merged array
 if rank == 0:
-    Gather sorted chunks from all processes into A
-else:
-    Send local_sorted to root process
+    correct = correctness_check(local_array)
+    print("Correct" if correct else "Incorrect")
 
-if rank == 0:
-    Print the fully sorted array A
-
-Finalize MPI
+// Finalize MPI
+MPI_Finalize()
 ```
 
 ### 2c. Evaluation plan - what and how will you measure and compare
@@ -409,38 +420,44 @@ CALI_MARK_END("comp");
 
 **Merge Sort Example Calltree**
 ```
-2.27236 main
-├─ 0.51182 MPI_Comm_dup
+1.69649 main
+├─ 0.13147 MPI_Comm_dup
 ├─ 0.00001 MPI_Finalize
 ├─ 0.00001 MPI_Finalized
-├─ 0.00004 MPI_Init
+├─ 0.00003 MPI_Init
 ├─ 0.00001 MPI_Initialized
-├─ 0.09589 comm
-│  └─ 0.09586 comm_large
-│     ├─ 0.00047 MPI_Gather
-│     └─ 0.09535 MPI_Scatter
-├─ 0.05614 comp
-│  ├─ 0.50816 comp_large
-│  └─ 0.04023 comp_small
-├─ 0.01107 correctness_check
-└─ 0.09147 data_init_runtime
+├─ 0.00770 comm
+│  ├─ 0.00161 comm_large
+│  │  ├─ 0.00181 MPI_Recv
+│  │  └─ 0.00070 MPI_Send
+│  └─ 0.00606 comm_small
+│     ├─ 0.01200 MPI_Recv
+│     └─ 0.00004 MPI_Send
+├─ 0.04222 comp
+│  └─ 0.04219 comp_large
+├─ 0.02930 correctness_check
+└─ 0.00069 data_init_runtime
 ```
 
 **Radix Sort Example Calltree**
 ```
-0.50797 main
-├─ 0.02925 MPI_Comm_dup
+0.48409 main
+├─ 0.02730 MPI_Comm_dup
 ├─ 0.00001 MPI_Finalize
 ├─ 0.00001 MPI_Finalized
 ├─ 0.00004 MPI_Init
 ├─ 0.00001 MPI_Initialized
-├─ 0.00143 comm
-│  └─ 0.00142 comm_large
-│     └─ 0.00139 MPI_Gather
-├─ 0.12496 comp
-│  └─ 0.12492 comp_large
-├─ 0.00783 correctness_check
-└─ 0.03707 data_init_runtime
+├─ 0.00127 comm
+│  ├─ 0.00115 comm_large
+│  │  ├─ 0.00083 MPI_Recv
+│  │  └─ 0.00143 MPI_Send
+│  └─ 0.00010 comm_small
+│     ├─ 0.00013 MPI_Recv
+│     └─ 0.00005 MPI_Send
+├─ 0.12135 comp
+│  └─ 0.12131 comp_large
+├─ 0.00769 correctness_check
+└─ 0.03557 data_init_runtime
 ```
 
 ### 3b. Collect Metadata
@@ -504,25 +521,25 @@ implementation_source: handwritten
 
 **Merge Sort Example Metadata**
 ```
-launchdate: 1729128347
+launchdate: 1729829519
 libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
-cmdline: [./mergesort, 4194304, Random]	
+cmdline: ['./mergesort', '65536', 'Random']
 cluster: c
 algorithm: merge
 programming_model: mpi
 data_type: int
 size_of_data_type: 4
-input_size: 4194304
+input_size: 65536
 input_type: Random
-num_procs: 32
-scalability: strong
-group_num: 1	
-implementation_source: online/ai
+num_procs: 1024
+scalability: weak
+group_num: 1
+implementation_source: online
 ```
 
 **Radix Sort Example Metadata**
 ```
-launchdate: 1729641751
+launchdate: 1730158958
 libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
 cmdline: ['./radixsort', '1048576', 'Random']
 cluster: c
@@ -628,7 +645,8 @@ This makes sense as you have to rely more on computing on the large scale than t
 ![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
 
 **Analysis**
-For this implementation of parallelized radix sort, we can see a consistent trend across every input size, where the average runtime per node increases as the number of processes used increases. As with merge sort, MPI_Gather was used to collect all of the locally sorted partitions of the input array, and then the master process merged them all together to be sorted correctly. This inefficiency poses a significant bottleneck on potential performance gain through paralellization, and thus the performance gains on large input sizes as seen in bitonic sort and sample sort were not achieved with this algorithm. Even though computation time decreases significantly and communication overhead becomes less of an issue when more processes are used on larger input sizes, the time taken to merge all of the local arrays causes the runtime to exponentially increase overall. Trends are relatively consistent across input array types, aside from Reverse Sorted, which becomes much faster as more processes are used on larger inputs.
+
+After parallelizing the merging of local arrays, this implementation of radix sort now better reflects the benefits of increasing process count for larger input sizes. With lower input sizes, the runtime of main unfortunately increases with more processes as the increased communication time between so many processes outweighs the benefit from parallelism. As the input size grows, we see that parallelism helps decrease runtime significantly, albeit with diminishing returns. Massive spikes in communication time can be seen at 512 processes on the two largest input sizes - this can be attributed to inconsistency between nodes used, since this spike is not consistent between input types and is seen to a lower degree on lower input sizes as well. All computation graphs show the same type of curve, reflecting the benefit of parallelism in those areas. 
 
 ## 5. Presentation
 Plots for the presentation should be as follows:

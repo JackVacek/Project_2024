@@ -420,21 +420,23 @@ CALI_MARK_END("comp");
 
 **Merge Sort Example Calltree**
 ```
-2.27236 main
-├─ 0.51182 MPI_Comm_dup
+1.69649 main
+├─ 0.13147 MPI_Comm_dup
 ├─ 0.00001 MPI_Finalize
 ├─ 0.00001 MPI_Finalized
-├─ 0.00004 MPI_Init
+├─ 0.00003 MPI_Init
 ├─ 0.00001 MPI_Initialized
-├─ 0.09589 comm
-│  └─ 0.09586 comm_large
-│     ├─ 0.00047 MPI_Gather
-│     └─ 0.09535 MPI_Scatter
-├─ 0.05614 comp
-│  ├─ 0.50816 comp_large
-│  └─ 0.04023 comp_small
-├─ 0.01107 correctness_check
-└─ 0.09147 data_init_runtime
+├─ 0.00770 comm
+│  ├─ 0.00161 comm_large
+│  │  ├─ 0.00181 MPI_Recv
+│  │  └─ 0.00070 MPI_Send
+│  └─ 0.00606 comm_small
+│     ├─ 0.01200 MPI_Recv
+│     └─ 0.00004 MPI_Send
+├─ 0.04222 comp
+│  └─ 0.04219 comp_large
+├─ 0.02930 correctness_check
+└─ 0.00069 data_init_runtime
 ```
 
 **Radix Sort Example Calltree**
@@ -519,20 +521,20 @@ implementation_source: handwritten
 
 **Merge Sort Example Metadata**
 ```
-launchdate: 1729128347
+launchdate: 1729829519
 libraries: /scratch/group/csce435-f24/Caliper/caliper/lib64/libcaliper.so.2 + more...
-cmdline: [./mergesort, 4194304, Random]	
+cmdline: ['./mergesort', '65536', 'Random']
 cluster: c
 algorithm: merge
 programming_model: mpi
 data_type: int
 size_of_data_type: 4
-input_size: 4194304
+input_size: 65536
 input_type: Random
-num_procs: 32
-scalability: strong
-group_num: 1	
-implementation_source: online/ai
+num_procs: 1024
+scalability: weak
+group_num: 1
+implementation_source: online
 ```
 
 **Radix Sort Example Metadata**

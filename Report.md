@@ -420,23 +420,23 @@ CALI_MARK_END("comp");
 
 **Merge Sort Example Calltree**
 ```
-1.69649 main
-├─ 0.13147 MPI_Comm_dup
+3.38795 main
+├─ 0.23467 MPI_Comm_dup
 ├─ 0.00001 MPI_Finalize
 ├─ 0.00001 MPI_Finalized
-├─ 0.00003 MPI_Init
+├─ 0.00006 MPI_Init
 ├─ 0.00001 MPI_Initialized
-├─ 0.00770 comm
-│  ├─ 0.00161 comm_large
-│  │  ├─ 0.00181 MPI_Recv
-│  │  └─ 0.00070 MPI_Send
-│  └─ 0.00606 comm_small
-│     ├─ 0.01200 MPI_Recv
-│     └─ 0.00004 MPI_Send
-├─ 0.04222 comp
-│  └─ 0.04219 comp_large
-├─ 0.02930 correctness_check
-└─ 0.00069 data_init_runtime
+├─ 0.00594 comm
+│  ├─ 0.00046 comm_large
+│  │  ├─ 0.00023 MPI_Recv
+│  │  └─ 0.00033 MPI_Send
+│  └─ 0.00544 comm_small
+│     ├─ 0.01012 MPI_Recv
+│     └─ 0.00036 MPI_Send
+├─ 0.00005 comp
+│  └─ 0.00004 comp_large
+├─ 0.00046 correctness_check
+└─ 0.00005 data_init_runtime
 ```
 
 **Radix Sort Example Calltree**
@@ -600,7 +600,21 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 ![Main Times 4194304](./bitonicsort/main_graphs/main_input_size_4194304.png)
 ![Main Times 16777216](./bitonicsort/main_graphs/main_input_size_16777216.png)
 ![Main Times 67108864](./bitonicsort/main_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./bitonicsort/main_graphs/main_input_size_268435456.png) 
+![Main Times 268435456](./bitonicsort/main_graphs/main_input_size_268435456.png)
+![Main Variance Random 65536](./bitonicsort/part4_graphs/Random/main_Variance_Random_65536.png)
+![Main Variance Random 268435456](./bitonicsort/part4_graphs/Random/main_Variance_Random_268435456.png)
+
+**Bitonic Sort Comm Graphs**
+![Comm Random Input Size 65536](./bitonicsort/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Random Input Size 268435456](./bitonicsort/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Variance Random 65536](./bitonicsort/part4_graphs/Random/comm_Variance_Random_65536.png)
+![Comm Variance Random 268435456](./bitonicsort/part4_graphs/Random/comm_Variance_Random_268435456.png)
+
+**Bitonic Sort Comp Large Graphs**
+![Comp Large Random Input Size 65536](./bitonicsort/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Random Input Size 268435456](./bitonicsort/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Variance Random 65536](./bitonicsort/part4_graphs/Random/comp_large_Variance_Random_65536.png)
+![Comp Large Variance Random 268435456](./bitonicsort/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 
 **Analysis**
 - In these graphs for bitonic sort that showcase the main function's runtime as a function of # of processes vs. time for each input type, we can see that for smaller inputs, there's an overall increasing trend up until around 2^24 array size. This can be explained due to the fact that there's overhead with MPI initializations, data generation, correctness check, etc. For these input sizes, it outweighs the computation speedup of the algorithm when we add more processes since the total time is so small already. As for the different input types, it seems to go in the order of increasing to decreasing for: perturbed, random, sorted, reversed. This pattern decreases and it's less visible as we add more processes. This can be due to the fact that our random generator library has more overhead (and perturbed essentially sorts it and then perturbs it causing it to be larger). Additionally, when we start using multiple nodes, there can be overhead associated with MPI communication between nodes as well (which is typically larger). However, as we add more processes, and the time seems to decrease in a seemingly exponential decay pattern. This makes sense since the main array can be split up into more processes and the sorting takes less time by that factor. This pattern seems to be approximately the same across max, min, and avg time per rank.
@@ -614,7 +628,21 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 ![Main Times 4194304](./samplesort/main_graphs/main_input_size_4194304.png)
 ![Main Times 16777216](./samplesort/main_graphs/main_input_size_16777216.png)
 ![Main Times 67108864](./samplesort/main_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./samplesort/main_graphs/main_input_size_268435456.png) 
+![Main Times 268435456](./samplesort/main_graphs/main_input_size_268435456.png)
+![Main Variance Random 65536](./samplesort/part4_graphs/Random/main_Variance_Random_65536.png)
+![Main Variance Random 268435456](./samplesort/part4_graphs/Random/main_Variance_Random_268435456.png)
+
+**Sample Sort Comm Graphs**
+![Comm Random Input Size 65536](./samplesort/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Random Input Size 268435456](./samplesort/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Variance Random 65536](./samplesort/part4_graphs/Random/comm_Variance_Random_65536.png)
+![Comm Variance Random 268435456](./samplesort/part4_graphs/Random/comm_Variance_Random_268435456.png)
+
+**Sample Sort Comp Large Graphs**
+![Comp Large Random Input Size 65536](./samplesort/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Random Input Size 268435456](./samplesort/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Variance Random 65536](./samplesort/part4_graphs/Random/comp_large_Variance_Random_65536.png)
+![Comp Large Variance Random 268435456](./samplesort/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 
 **Analysis:**
 - For these graphs, we can see that the trends change as the input size increases. This is because as the input size increases, the communication overhead begins to go away. For the first three graphs, we see that the times it take for communication overtakes the computation time. Since there are more processes to communicate between, the main time would increase as the number of processes increases. In the fourth graph, you can see that the communcation times and computation times begin to even out where computation times begin to matter more. This is noticeable throughout Min, Max, and Avg times per rank. The trend becomes something more linear and constant. For the final three graphs, we can see that computation completely overtakes communication times and the trend changes. We see that the time it takes to compute the data decreases as the number of processes increases. This is because the data is split up more and more, so the computation time decreases. The average time per rank gives a better look at these trends, but minimum and maximum times follows around the same trend with some outliers.
@@ -622,18 +650,30 @@ perform runs that invoke algorithm2 for Sorted, ReverseSorted, and Random data).
 - For variance time per rank, the trends are overall consistent except for some spikes for some jobs. This is normal since the sorting times should generally be consistent, but there are some outliers that can cause the variance to increase.
 
 **Merge Sort Graphs**
-![Main_times_1048576_Random](./mergesort/Graphs/main_input_size_1048576_Random.png)
-![Main_times_1048576_Sorted](./mergesort/Graphs/main_input_size_1048576_Sorted.png)
-![Main Times 67108864_Sorted](./mergesort/Graphs/main_input_size_67108864_Sorted.png)
-![Main_times_67108864_Random](./mergesort/Graphs/main_input_size_67108864_Random.png)
+![Main Times 65536](./mergesort/Graphs/part5_graphs/strong_scaling/main_65536.png)
+![Main Times 262144](./mergesort/Graphs/part5_graphs/strong_scaling/main_262144.png)
+![Main Times 1048576](./mergesort/Graphs/part5_graphs/strong_scaling/main_1048576.png)
+![Main Times 4194304](./mergesort/Graphs/part5_graphs/strong_scaling/main_4194304.png)
+![Main Times 16777216](./mergesort/Graphs/part5_graphs/strong_scaling/main_16777216.png)
+![Main Times 67108864](./mergesort/Graphs/part5_graphs/strong_scaling/main_67108864.png)
+![Main Times 268435456](./mergesort/Graphs/part5_graphs/strong_scaling/main_268435456.png)
+![Main Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/main_Variance_Random_65536.png)
+![Main Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/main_Variance_Random_268435456.png)
 
+**Merge Sort Comm Graphs**
+![Comm Random Input Size 65536](./mergesort/Graphs/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Random Input Size 268435456](./mergesort/Graphs/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/comm_Variance_Random_65536.png)
+![Comm Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/comm_Variance_Random_268435456.png)
+
+**Merge Sort Comp Large Graphs**
+![Comp Large Random Input Size 65536](./mergesort/Graphs/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Random Input Size 268435456](./mergesort/Graphs/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Variance Random 65536](./mergesort/Graphs/part4_graphs/Random/comp_large_Variance_Random_65536.png)
+![Comp Large Variance Random 268435456](./mergesort/Graphs/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 **Analysis**
 
-For my algorithm, unfortunately, as you increase the number of processes on the same problem size, the average time per node increases. I think that this could be due to the way that I collect the results from
-each thread. I use gather, which causes all of the threads to get their result before trying to sort the global array. Due to the increase in the number of threads, this causes an increase in the waiting time
-for each of them. I was also unable to generate all of the caliper files for this part as of now due to the Grace cluster not allowing for me to run my jobs I queued. I had them queued for ~12 hours and they never ran.
-I will continue to run them after this to make sure that I have the results I need. If you look at the computation large in my Graphs file under merge sort, you can see that it increases with the number of processes.
-This makes sense as you have to rely more on computing on the large scale than the small scale. (https://github.com/JackVacek/Project_2024/tree/main/mergesort/Graphs). As you increase the overall thread, the master thread has to compute the final results from all of the threads.
+Not Done
 
 **Radix Sort Main Graphs**
 ![Main Times 65536](./radixsort/main_graphs/main_input_size_65536.png)
@@ -642,7 +682,21 @@ This makes sense as you have to rely more on computing on the large scale than t
 ![Main Times 4194304](./radixsort/main_graphs/main_input_size_4194304.png)
 ![Main Times 16777216](./radixsort/main_graphs/main_input_size_16777216.png)
 ![Main Times 67108864](./radixsort/main_graphs/main_input_size_67108864.png)
-![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png) 
+![Main Times 268435456](./radixsort/main_graphs/main_input_size_268435456.png)
+![Main Variance Random 65536](./radixsort/part4_graphs/Random/main_Variance_Random_65536.png)
+![Main Variance Random 268435456](./radixsort/part4_graphs/Random/main_Variance_Random_268435456.png)
+
+**Radix Sort Comm Graphs**
+![Comm Random Input Size 65536](./radixsort/part4_graphs/Random/comm_Random_inputsize_65536.png)
+![Comm Random Input Size 268435456](./radixsort/part4_graphs/Random/comm_Random_inputsize_268435456.png)
+![Comm Variance Random 65536](./radixsort/part4_graphs/Random/comm_Variance_Random_65536.png)
+![Comm Variance Random 268435456](./radixsort/part4_graphs/Random/comm_Variance_Random_268435456.png)
+
+**Radix Sort Comp Large Graphs**
+![Comp Large Random Input Size 65536](./radixsort/part4_graphs/Random/comp_large_Random_inputsize_65536.png)
+![Comp Large Random Input Size 268435456](./radixsort/part4_graphs/Random/comp_large_Random_inputsize_268435456.png)
+![Comp Large Variance Random 65536](./radixsort/part4_graphs/Random/comp_large_Variance_Random_65536.png)
+![Comp Large Variance Random 268435456](./radixsort/part4_graphs/Random/comp_large_Variance_Random_268435456.png)
 
 **Analysis**
 
